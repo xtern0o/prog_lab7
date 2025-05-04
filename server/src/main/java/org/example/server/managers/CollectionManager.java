@@ -18,9 +18,10 @@ public class CollectionManager {
     public final static Logger logger = LoggerFactory.getLogger(CollectionManager.class);
     /**
      * Коллекция билетов текущего сеанса
+     * final, чтобы во время рантайма не рпоизошло случайной замены
      */
     @Getter
-    private static PriorityBlockingQueue<Ticket> collection = new PriorityBlockingQueue<>();
+    private static final PriorityBlockingQueue<Ticket> collection = new PriorityBlockingQueue<>();
 
     /**
      * Время инициализации коллекции
@@ -30,18 +31,19 @@ public class CollectionManager {
     private final Date initDate = new Date();
 
     /**
-     * Метод присваивает коллекции передаваемое значение, если элементы коллекции корректны
+     * Метод присваивает коллекции передаваемое значение, если элементы коллекции корректны;
+     * synchronized, так как между двумя атомарными операциями другой поток может изменить данные
      * @param collection новая коллекция
      * @return true если успешно, false если не прошла валидация одного из элементов
      */
-    public static boolean setCollection(PriorityBlockingQueue<Ticket> collection) {
-        if (!CollectionManager.allIdsAreUnique(collection)) {
+    public static synchronized boolean setCollection(PriorityBlockingQueue<Ticket> collection) {
+        if (!CollectionManager.allIdsAreUnique(collection) || !collection.stream().allMatch(Ticket::validate)) {
             return false;
         }
 
-        if (!collection.stream().allMatch(Ticket::validate)) return false;
+        CollectionManager.collection.clear();
+        CollectionManager.collection.addAll(collection);
 
-        CollectionManager.collection = collection;
         logger.info("Коллекция обновлена");
         return true;
     }
@@ -51,9 +53,11 @@ public class CollectionManager {
      * @return минимальный несуществующий id
      */
     public static int generateFreeId() {
-        if (collection.isEmpty()) return 1;
+        PriorityBlockingQueue<Ticket> current = collection;
 
-        HashSet<Integer> existIds = collection.stream()
+        if (current.isEmpty()) return 1;
+
+        Set<Integer> existIds = current.stream()
                 .map(Ticket::getId)
                 .collect(Collectors.toCollection(HashSet::new));
 
@@ -106,8 +110,12 @@ public class CollectionManager {
      */
     public boolean removeById(int id) {
         boolean deleted = collection.removeIf(ticket -> ticket.getId() == id);
-        if (deleted) logger.info("Элемент с id=" + id + " был успешно удален");
-        else logger.warn("Элемент с id={} не найден", id);
+        if (deleted) {
+            logger.info("Элемент с id={} был успешно удален", id);
+        }
+        else {
+            logger.warn("Элемент с id={} не найден", id);
+        }
         return deleted;
     }
 

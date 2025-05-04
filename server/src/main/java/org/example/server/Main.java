@@ -5,6 +5,7 @@ import org.example.server.cli.ConsoleOutput;
 import org.example.server.command.Command;
 import org.example.server.command.commands.*;
 import org.example.server.managers.*;
+import org.example.server.utils.DatabaseSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +15,7 @@ import java.util.Arrays;
 
 public class Main {
     static int port;
+
     static CollectionManager collectionManager = new CollectionManager();
     static CommandManager commandManager = new CommandManager();
     static RequestCommandHandler requestCommandHandler = new RequestCommandHandler(commandManager);
@@ -30,10 +32,11 @@ public class Main {
         if (!validateArgs(args)) return;
 
         FileManager fileManager = new FileManager(new File(args[0]), consoleOutput);
-
         if (!fileManager.validate()) return;
-
         fileManager.deserializeCollectionFromJSON();
+
+        DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
+        CollectionManager.setCollection(databaseManager.loadCollection());
 
         ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
                 new HelpCommand(commandManager),

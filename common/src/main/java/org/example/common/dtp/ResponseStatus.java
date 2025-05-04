@@ -42,5 +42,10 @@ public enum ResponseStatus {
     /**
      * Выполнить скрипт на стороне клиента
      */
-    EXECUTE_SCRIPT
+    EXECUTE_SCRIPT,
+
+    /**
+     * Тотальный анлак. Логин фэилед
+     */
+    LOGIN_UNLUCK
 }

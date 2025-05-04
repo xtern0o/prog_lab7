@@ -1,12 +1,13 @@
 package org.example.client.managers;
 
-import lombok.AllArgsConstructor;
 import org.example.client.builders.TicketBuilder;
 import org.example.client.cli.ConsoleInput;
 import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
 import org.example.common.dtp.ResponseStatus;
+import org.example.common.dtp.User;
 import org.example.common.entity.Ticket;
+import org.example.common.exceptions.NoSuchCommand;
 import org.example.common.utils.Printable;
 
 import java.io.File;
@@ -14,16 +15,30 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 
 /**
  * Класс, отвечающий за MainLoop и соединение действий пользователя и клиента
  */
-@AllArgsConstructor
 public class RuntimeManager implements Runnable {
     private final Printable consoleOutput;
     private final ConsoleInput consoleInput;
     private final SimpleClient client;
     private final RunnableScriptsManager runnableScriptsManager;
+    private final ClientCommandManager clientCommandManager;
+
+    /**
+     * Текущий пользователь
+     */
+    private User currentUser;
+
+    public RuntimeManager(Printable consoleOutput, ConsoleInput consoleInput, SimpleClient client, RunnableScriptsManager runnableScriptsManager, ClientCommandManager clientCommandManager) {
+        this.consoleOutput = consoleOutput;
+        this.consoleInput = consoleInput;
+        this.client = client;
+        this.runnableScriptsManager = runnableScriptsManager;
+        this.clientCommandManager = clientCommandManager;
+    }
 
     /**
      * Запуск клиента
@@ -48,14 +63,20 @@ public class RuntimeManager implements Runnable {
 
                 String[] queryParts = queryString.split(" ");
 
-                // TODO: подумать, как не хардкодить
-                // ну, 1 команда терпимо
-                processSpecialCommands(queryParts);
+                if (processClientCommand(queryParts)) continue;
+
+                if (Objects.isNull(currentUser)) {
+                    consoleOutput.printError("Неавторизованные пользователи не могут выполнять команды для взаимодействия с коллекцией");
+                    consoleOutput.println("> \"login\", если у вас уже есть аккаунт");
+                    consoleOutput.println("> \"register\", чтобы создать новый");
+                    continue;
+                }
 
                 Response response = client.send(
                         new RequestCommand(
                                 queryParts[0],
-                                new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length)))
+                                new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length))),
+                                currentUser
                         )
                 );
                 if (response == null) {
@@ -138,7 +159,8 @@ public class RuntimeManager implements Runnable {
                 Response response1 = client.send(
                         new RequestCommand(
                                 queryParts[0],
-                                new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length)))
+                                new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length))),
+                                currentUser
                         )
                 );
 
@@ -182,7 +204,8 @@ public class RuntimeManager implements Runnable {
                 new RequestCommand(
                         queryParts[0],
                         new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length))),
-                        ticket
+                        ticket,
+                        currentUser
                 )
         );
         if (responseOnBuild.getResponseStatus() != ResponseStatus.OK) {
@@ -195,12 +218,19 @@ public class RuntimeManager implements Runnable {
 
     /**
      * Метод для выполнения команд на стороне клиента
-     * (при наличии более двух команд рекомандуется обрабатывать их по паттерну COMMAND как на сервере)
-     * @param queryParts
+     * @param queryParts части команды
+     * @return true если команда выполнена false если нет
      */
-    public void processSpecialCommands(String[] queryParts) {
-        if (queryParts[0].equals("exit")) {
-            System.exit(0);
+    public boolean processClientCommand(String[] queryParts) {
+        String qCommandName = queryParts[0];
+        if (qCommandName.isBlank()) return false;
+        String[] qCommandArgs = Arrays.copyOfRange(queryParts, 1, queryParts.length);
+
+        try {
+            clientCommandManager.execute(qCommandName, qCommandArgs);
+            return true;
+        } catch (NoSuchCommand noSuchCommand) {
+            return false;
         }
     }
 }

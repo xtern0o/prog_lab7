@@ -29,3 +29,5 @@
 2025-05-04 22:42:26 [main] INFO  org.example.server.managers.Server  - Sent RESPONSE to "/127.0.0.1:42760" successfully (NO_SUCH_COMMAND)
 2025-05-04 22:42:35 [Thread-0] INFO  org.example.server.managers.Server  - Сокеты и селекторы были закрыты
 2025-05-04 22:42:35 [Thread-0] INFO  o.e.server.managers.RuntimeManager  - ⚡ Сервер - В С Ё.
+2025-05-04 23:41:54 [main] INFO  o.e.s.managers.CollectionManager    - Коллекция обновлена
+2025-05-04 23:41:54 [main] ERROR o.e.server.managers.DatabaseManager - Невозможно подключиться к базе данных

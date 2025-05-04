@@ -2,7 +2,12 @@ package org.example.client;
 
 import org.example.client.cli.ConsoleInput;
 import org.example.client.cli.ConsoleOutput;
+import org.example.client.command.client_commands.ExitCommand;
 import org.example.client.managers.*;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Main {
     static String host;
@@ -10,6 +15,7 @@ public class Main {
     static ConsoleOutput consoleOutput = new ConsoleOutput();
     static ConsoleInput consoleInput = new ConsoleInput();
     static RunnableScriptsManager runnableScriptsManager = new RunnableScriptsManager();
+    static ClientCommandManager clientCommandManager = new ClientCommandManager();
 
     public static void main(String[] args) {
         if (args.length != 2) {
@@ -30,6 +36,10 @@ public class Main {
 
         SimpleClient client = new SimpleClient(host, port, 100, 10, consoleOutput, false);
 
-        new RuntimeManager(consoleOutput, consoleInput, client, runnableScriptsManager).run();
+        clientCommandManager.addCommands(new ArrayList<>(List.of(
+                new ExitCommand()
+        )));
+
+        new RuntimeManager(consoleOutput, consoleInput, client, runnableScriptsManager, clientCommandManager).run();
     }
 }

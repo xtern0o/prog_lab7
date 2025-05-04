@@ -1,6 +1,7 @@
 package org.example.server.managers;
 
 import lombok.AllArgsConstructor;
+import org.example.common.dtp.User;
 import org.example.common.utils.Printable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +18,7 @@ public class RuntimeManager implements Runnable {
     private final Printable consoleOutput;
     private final Server server;
     private final FileManager fileManager;
+    private User currentUser;
 
     public static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 

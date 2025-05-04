@@ -2,6 +2,7 @@ package org.example.common.dtp;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import org.example.common.entity.Ticket;
 
 import java.io.Serializable;
@@ -28,20 +29,21 @@ public class RequestCommand implements Serializable {
      */
     private final Ticket ticketObject;
 
-    public RequestCommand(String commandName, ArrayList<String> args) {
-        this(commandName, args, null);
+    private final User user;
+
+    public RequestCommand(String commandName, ArrayList<String> args, @NonNull User user) {
+        this(commandName, args, null, user);
     }
 
-    public RequestCommand(String commandName) {
-        this(commandName, null, null);
+    public RequestCommand(String commandName, @NonNull User user) {
+        this(commandName, null, null, user);
     }
 
-    public RequestCommand(String commandName, Ticket ticketObject) {
-        this(commandName, null, ticketObject);
+    public RequestCommand(String commandName, Ticket ticketObject, @NonNull User user) {
+        this(commandName, null, ticketObject, user);
     }
     
     public boolean isEmpty() {
         return commandName.isBlank() && args.isEmpty() && ticketObject == null;
     }
-
 }

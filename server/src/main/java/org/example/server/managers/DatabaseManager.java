@@ -14,6 +14,7 @@ import java.sql.*;
 import java.time.ZoneId;
 import java.util.HexFormat;
 import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class DatabaseManager {
     public static final Logger logger = LoggerFactory.getLogger(DatabaseManager.class);
@@ -153,9 +154,9 @@ public class DatabaseManager {
         }
     }
 
-    public PriorityQueue<Ticket> loadCollection() {
+    public PriorityBlockingQueue<Ticket> loadCollection() {
         try {
-            PriorityQueue<Ticket> collection = new PriorityQueue<>();
+            PriorityBlockingQueue<Ticket> collection = new PriorityBlockingQueue<>();
 
             PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.getAllTickets);
             ResultSet resultSet = ps.executeQuery();

@@ -55,8 +55,8 @@ public class DatabaseManager {
                 this.connection = DriverManager.getConnection(DB_URL_HELIOS, DB_USER, DB_PASSWORD);
             } catch (SQLException e1) {
                 logger.error("Невозможно подключиться к базе данных");
-                logger.debug(e.getMessage());
-                logger.debug(e1.getMessage());
+                logger.error(e.getMessage());
+                logger.error(e1.getMessage());
                 System.exit(1);
             }
         }

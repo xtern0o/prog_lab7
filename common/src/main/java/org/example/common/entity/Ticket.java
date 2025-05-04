@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.example.common.utils.Validatable;
@@ -16,6 +17,7 @@ import org.example.common.utils.Validatable;
  */
 @Getter
 @Setter
+@AllArgsConstructor
 public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
@@ -36,7 +38,6 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
     private Person person; //Поле не может быть null
 
     public Ticket() {
-
     }
 
     public Ticket(String name, Coordinates coordinates, double price, Float discount, TicketType type, boolean refundable, Person person) {
@@ -48,7 +49,6 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
         this.refundable = refundable;
         this.person = person;
 
-//        this.id = CollectionManager.generateFreeId();
         this.id = 0;
         this.creationDate = ZonedDateTime.now();
     }

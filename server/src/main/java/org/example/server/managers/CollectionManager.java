@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.*;
+import java.util.concurrent.PriorityBlockingQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -16,10 +17,10 @@ import java.util.stream.Collectors;
 public class CollectionManager {
     public final static Logger logger = LoggerFactory.getLogger(CollectionManager.class);
     /**
-     * Коллекция билетов
+     * Коллекция билетов текущего сеанса
      */
     @Getter
-    private static PriorityQueue<Ticket> collection = new PriorityQueue<>();
+    private static PriorityBlockingQueue<Ticket> collection = new PriorityBlockingQueue<>();
 
     /**
      * Время инициализации коллекции
@@ -33,7 +34,7 @@ public class CollectionManager {
      * @param collection новая коллекция
      * @return true если успешно, false если не прошла валидация одного из элементов
      */
-    public static boolean setCollection(PriorityQueue<Ticket> collection) {
+    public static boolean setCollection(PriorityBlockingQueue<Ticket> collection) {
         if (!CollectionManager.allIdsAreUnique(collection)) {
             return false;
         }

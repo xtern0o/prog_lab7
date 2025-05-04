@@ -15,6 +15,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.PriorityQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 /**
  * Менеджер для управления файлами
@@ -98,18 +99,18 @@ public class FileManager implements Validatable {
             // Проверяем, пустой ли JSON
             if (json.isEmpty() || json.equals("{}")) {
                 logger.warn("Файл JSON пустой. Используется пустая коллекция");
-                CollectionManager.setCollection(new PriorityQueue<>());
+                CollectionManager.setCollection(new PriorityBlockingQueue<>());
                 return;
             }
 
             ObjectMapper objectMapper = new ObjectMapper();
             objectMapper.registerModule(new JavaTimeModule());
 
-            PriorityQueue<Ticket> jsonCollection = objectMapper.readValue(
+            PriorityBlockingQueue<Ticket> jsonCollection = objectMapper.readValue(
                     json,
                     objectMapper
                             .getTypeFactory()
-                            .constructCollectionType(PriorityQueue.class, Ticket.class)
+                            .constructCollectionType(PriorityBlockingQueue.class, Ticket.class)
             );
 
             if (!CollectionManager.setCollection(jsonCollection)) {

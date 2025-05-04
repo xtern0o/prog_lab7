@@ -1,5 +1,6 @@
 package org.example.server;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import org.example.server.cli.ConsoleOutput;
 import org.example.server.command.Command;
 import org.example.server.command.commands.*;
@@ -17,6 +18,11 @@ public class Main {
     static CommandManager commandManager = new CommandManager();
     static RequestCommandHandler requestCommandHandler = new RequestCommandHandler(commandManager);
     static ConsoleOutput consoleOutput = new ConsoleOutput();
+
+    public static Dotenv dotenv = Dotenv
+            .configure()
+            .directory("./server/")
+            .load();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 

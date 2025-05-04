@@ -30,7 +30,7 @@ public class RuntimeManager implements Runnable {
     /**
      * Текущий пользователь
      */
-    private User currentUser;
+    private AuthManager authManager;
 
     public RuntimeManager(Printable consoleOutput, ConsoleInput consoleInput, SimpleClient client, RunnableScriptsManager runnableScriptsManager, ClientCommandManager clientCommandManager) {
         this.consoleOutput = consoleOutput;
@@ -65,7 +65,7 @@ public class RuntimeManager implements Runnable {
 
                 if (processClientCommand(queryParts)) continue;
 
-                if (Objects.isNull(currentUser)) {
+                if (Objects.isNull(AuthManager.getCurrentUser())) {
                     consoleOutput.printError("Неавторизованные пользователи не могут выполнять команды для взаимодействия с коллекцией");
                     consoleOutput.println("> \"login\", если у вас уже есть аккаунт");
                     consoleOutput.println("> \"register\", чтобы создать новый");
@@ -76,7 +76,7 @@ public class RuntimeManager implements Runnable {
                         new RequestCommand(
                                 queryParts[0],
                                 new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length))),
-                                currentUser
+                                AuthManager.getCurrentUser()
                         )
                 );
                 if (response == null) {
@@ -85,11 +85,8 @@ public class RuntimeManager implements Runnable {
                 }
                 this.printResponse(response);
 
-                switch (response.getResponseStatus()) {
-                    case OBJECT_REQUIRED -> {
-                        buildObject(queryParts);
-                    }
-                    default -> {}
+                if (Objects.requireNonNull(response.getResponseStatus()) == ResponseStatus.OBJECT_REQUIRED) {
+                    buildObject(queryParts);
                 }
             } catch (NoSuchElementException noSuchElementException) {
                 consoleOutput.println("Конец ввода");
@@ -160,7 +157,7 @@ public class RuntimeManager implements Runnable {
                         new RequestCommand(
                                 queryParts[0],
                                 new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length))),
-                                currentUser
+                                AuthManager.getCurrentUser()
                         )
                 );
 
@@ -205,7 +202,7 @@ public class RuntimeManager implements Runnable {
                         queryParts[0],
                         new ArrayList<>(Arrays.asList(Arrays.copyOfRange(queryParts, 1, queryParts.length))),
                         ticket,
-                        currentUser
+                        AuthManager.getCurrentUser()
                 )
         );
         if (responseOnBuild.getResponseStatus() != ResponseStatus.OK) {

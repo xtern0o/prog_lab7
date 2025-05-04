@@ -113,11 +113,11 @@ public class Server {
             Response response = requestCommandHandler.handleRequestCommand(requestCommand);
             clientChannel.write(ByteBuffer.wrap(ObjectSerializer.serializeObject(response)));
 
-            logger.info("COMMAND NAME: \"{}\"; ARGS: \"{}\"", requestCommand.getCommandName(), requestCommand.getArgs());
+            logger.info("COMMAND NAME: \"{}\"; ARGS: \"{}\"; USER: \"{}\"", requestCommand.getCommandName(), requestCommand.getArgs(), requestCommand.getUser());
             logger.info("Sent RESPONSE to \"{}\" successfully ({})", clientChannel.getRemoteAddress(), response.getResponseStatus());
 
         } catch (ClassNotFoundException e) {
-            Response errorResponse = new Response(ResponseStatus.COMMAND_ERROR, "Некорректный объект команды");
+            Response errorResponse = new Response(ResponseStatus.COMMAND_ERROR, "Incorrect command object");
             clientChannel.write(ByteBuffer.wrap(ObjectSerializer.serializeObject(errorResponse)));
 
             logger.warn("Got INCORRECT request FROM \"{}\". Sent response successfully ({})", clientChannel.getRemoteAddress(), errorResponse.getResponseStatus());

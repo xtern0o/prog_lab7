@@ -18,7 +18,6 @@ public class RuntimeManager implements Runnable {
     private final Printable consoleOutput;
     private final Server server;
     private final FileManager fileManager;
-    private User currentUser;
 
     public static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 

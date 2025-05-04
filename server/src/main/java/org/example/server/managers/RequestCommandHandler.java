@@ -4,8 +4,10 @@ import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
 import org.example.common.dtp.ResponseStatus;
 import org.example.common.exceptions.NoSuchCommand;
+import org.example.server.utils.DatabaseSingleton;
 
 /**
+ * Middleware
  * Класс для обработки запросов с командами
  * @author maxkarn
  */
@@ -25,6 +27,9 @@ public class RequestCommandHandler {
      */
     public Response handleRequestCommand(RequestCommand requestCommand) {
         try {
+            if (!DatabaseSingleton.getDatabaseManager().checkUserData(requestCommand.getUser())) {
+                return new Response(ResponseStatus.LOGIN_UNLUCK, "Неверные данные пользователя");
+            }
             return commandManager.execute(requestCommand);
         } catch (NoSuchCommand noSuchCommand) {
             return new Response(ResponseStatus.NO_SUCH_COMMAND, "Команда \"" + requestCommand.getCommandName() + "\" не найдена");

@@ -16,7 +16,6 @@ public class AddCommand extends Command {
         this.collectionManager = collectionManager;
     }
 
-
     @Override
     public Response execute(RequestCommand requestCommand) {
         if (requestCommand.getArgs() != null) {

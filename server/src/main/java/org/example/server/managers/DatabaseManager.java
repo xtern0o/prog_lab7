@@ -12,8 +12,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.ZoneId;
-import java.util.HexFormat;
-import java.util.PriorityQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class DatabaseManager {
@@ -101,7 +99,7 @@ public class DatabaseManager {
             PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.getUserByLogin);
             ps.setString(1, login);
 
-            ResultSet resultSet = ps.getResultSet();
+            ResultSet resultSet = ps.executeQuery();
 
             if (resultSet == null) return false;
 

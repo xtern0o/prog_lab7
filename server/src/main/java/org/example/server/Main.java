@@ -38,7 +38,7 @@ public class Main {
         DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
         CollectionManager.setCollection(databaseManager.loadCollection());
 
-        ArrayList<Command> commands = new ArrayList<>(Arrays.asList(
+        ArrayList<Command> commands = new ArrayList<Command>(Arrays.asList(
                 new HelpCommand(commandManager),
                 new HistoryCommand(commandManager),
                 new AddCommand(collectionManager),
@@ -52,7 +52,9 @@ public class Main {
                 new FilterStartsWithNameCommand(collectionManager),
                 new PrintUniqueDiscountCommand(),
                 new PrintFieldDescendingPersonCommand(),
-                new ExecuteScriptCommand()
+                new ExecuteScriptCommand(),
+                new PingCommand(),
+                new RegisterCommand()
         )
         );
         commandManager.addCommands(commands);

@@ -4,6 +4,7 @@ import org.example.client.cli.ConsoleInput;
 import org.example.client.cli.ConsoleOutput;
 import org.example.client.command.client_commands.ExitCommand;
 import org.example.client.command.client_commands.LoginCommand;
+import org.example.client.command.client_commands.RegisterCommand;
 import org.example.client.managers.*;
 
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public class Main {
 
         clientCommandManager.addCommands(new ArrayList<>(List.of(
                 new ExitCommand(),
-                new LoginCommand(client, consoleInput, consoleOutput)
+                new LoginCommand(client, consoleInput, consoleOutput),
+                new RegisterCommand(client, consoleInput, consoleOutput)
         )));
 
         new RuntimeManager(consoleOutput, consoleInput, client, runnableScriptsManager, clientCommandManager).run();

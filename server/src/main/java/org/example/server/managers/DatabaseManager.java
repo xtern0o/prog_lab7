@@ -103,6 +103,7 @@ public class DatabaseManager {
             ps.setString(1, login);
 
             ResultSet resultSet = ps.getResultSet();
+            if (resultSet == null) return false;
             if (resultSet.next()) {
                 String salt = resultSet.getString("salt");
                 String inputUserPasswordHash = hashPassword(inputUser.password(), salt);

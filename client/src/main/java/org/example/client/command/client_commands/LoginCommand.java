@@ -18,7 +18,7 @@ public class LoginCommand extends ClientCommand {
     private final ConsoleInput consoleInput;
     private final ConsoleOutput consoleOutput;
 
-    public LoginCommand(String name, String description, SimpleClient client, ConsoleInput consoleInput, ConsoleOutput consoleOutput) {
+    public LoginCommand(SimpleClient client, ConsoleInput consoleInput, ConsoleOutput consoleOutput) {
         super("login", "авторизация");
         this.client = client;
         this.consoleInput = consoleInput;

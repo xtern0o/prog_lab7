@@ -71,4 +71,8 @@ public class CommandManager {
         Command command = commands.get(requestCommand.getCommandName());
         return command.execute(requestCommand);
     }
+
+    public Command getCommand(String commandName) {
+        return commands.get(commandName);
+    }
 }

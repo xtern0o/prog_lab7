@@ -163,8 +163,8 @@ public class DatabaseManager {
             ResultSet resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 Coordinates coordinates = new Coordinates(
-                        resultSet.getFloat("coords_x"),
-                        resultSet.getInt("coords_y")
+                        resultSet.getFloat("coord_x"),
+                        resultSet.getInt("coord_y")
                 );
                 Person person = new Person(
                         resultSet.getLong("height"),

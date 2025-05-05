@@ -37,6 +37,9 @@ public class CollectionManager {
      * @return true если успешно, false если не прошла валидация одного из элементов
      */
     public static synchronized boolean setCollection(PriorityBlockingQueue<Ticket> collection) {
+        if (collection == null) {
+            return true;
+        }
         if (!CollectionManager.allIdsAreUnique(collection) || !collection.stream().allMatch(Ticket::validate)) {
             return false;
         }

@@ -4,6 +4,8 @@ import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
 import org.example.common.dtp.ResponseStatus;
 import org.example.common.exceptions.NoSuchCommand;
+import org.example.server.command.Command;
+import org.example.server.command.NoAuthCommand;
 import org.example.server.utils.DatabaseSingleton;
 
 /**
@@ -27,10 +29,21 @@ public class RequestCommandHandler {
      */
     public Response handleRequestCommand(RequestCommand requestCommand) {
         try {
-            if (!DatabaseSingleton.getDatabaseManager().checkUserData(requestCommand.getUser())) {
-                return new Response(ResponseStatus.LOGIN_UNLUCK, "Неверные данные пользователя");
+            Command command = commandManager.getCommand(requestCommand.getCommandName());
+            if (command == null) throw new NoSuchCommand(requestCommand.getCommandName());
+
+            if (!requestCommand.getUser().validate()) {
+                return new Response(ResponseStatus.VALIDATION_ERROR, "Failed user validation");
             }
+
+            if (!(command instanceof NoAuthCommand)) {
+                if (!DatabaseSingleton.getDatabaseManager().checkUserData(requestCommand.getUser())) {
+                    return new Response(ResponseStatus.LOGIN_UNLUCK, "Неверные данные пользователя");
+                }
+            }
+
             return commandManager.execute(requestCommand);
+
         } catch (NoSuchCommand noSuchCommand) {
             return new Response(ResponseStatus.NO_SUCH_COMMAND, "Команда \"" + requestCommand.getCommandName() + "\" не найдена");
         } catch (IllegalArgumentException illegalArgumentException) {

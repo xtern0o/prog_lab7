@@ -88,6 +88,18 @@ public class DatabaseManager {
         logger.info("Добавлен новый пользователь: {}", user);
     }
 
+    public User getUserByLogin(String login) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.getUserByLogin);
+        ps.setString(1, login);
+        ResultSet resultSet = ps.executeQuery();
+
+        if (resultSet == null) return null;
+        return new User(
+                resultSet.getString("login"),
+                resultSet.getString("password")
+        );
+    }
+
     /**
      * Проверка соответствия введенного пароля пользователя и фактического
      * @param inputUser объект юзера

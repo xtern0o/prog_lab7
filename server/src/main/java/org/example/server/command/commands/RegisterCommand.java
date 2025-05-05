@@ -20,6 +20,10 @@ public class RegisterCommand extends Command implements NoAuthCommand {
         try {
             DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
 
+            if (databaseManager.getUserByLogin(requestCommand.getUser().login()) != null) {
+                return new Response(ResponseStatus.COMMAND_ERROR, "Пользователь с таким именем уже есть");
+            }
+
             databaseManager.addUser(requestCommand.getUser());
 
             return new Response(ResponseStatus.OK, "Регистрация прошла успешно");

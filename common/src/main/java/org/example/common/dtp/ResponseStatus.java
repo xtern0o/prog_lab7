@@ -47,5 +47,10 @@ public enum ResponseStatus {
     /**
      * Тотальный анлак. Логин фэилед
      */
-    LOGIN_UNLUCK
+    LOGIN_UNLUCK,
+
+    /**
+     * Для выполнения команды необходима авторизация
+     */
+    LOGIN_REQUIRED
 }

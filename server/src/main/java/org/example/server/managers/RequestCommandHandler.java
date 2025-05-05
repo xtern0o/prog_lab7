@@ -32,11 +32,13 @@ public class RequestCommandHandler {
             Command command = commandManager.getCommand(requestCommand.getCommandName());
             if (command == null) throw new NoSuchCommand(requestCommand.getCommandName());
 
-            if (!requestCommand.getUser().validate()) {
-                return new Response(ResponseStatus.VALIDATION_ERROR, "Failed user validation");
-            }
-
             if (!(command instanceof NoAuthCommand)) {
+//                if (requestCommand.getUser() == null) {
+//                    return new Response(ResponseStatus.LOGIN_REQUIRED, "Для выполнения этой команды необходима авторизация");
+//                }
+                if (!requestCommand.getUser().validate()) {
+                    return new Response(ResponseStatus.VALIDATION_ERROR, "Failed user validation");
+                }
                 if (!DatabaseSingleton.getDatabaseManager().checkUserData(requestCommand.getUser())) {
                     return new Response(ResponseStatus.LOGIN_UNLUCK, "Неверные данные пользователя");
                 }

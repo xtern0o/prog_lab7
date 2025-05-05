@@ -89,16 +89,18 @@ public class DatabaseManager {
     }
 
     public User getUserByLogin(String login) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.getUserByLogin);
-        ps.setString(1, login);
-        ResultSet resultSet = ps.executeQuery();
-
-        if (resultSet == null) return null;
-        resultSet.next();
-        return new User(
-                resultSet.getString("login"),
-                resultSet.getString("password")
-        );
+        try (PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.getUserByLogin)) {
+            ps.setString(1, login);
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    return new User(
+                            resultSet.getString("login"),
+                            resultSet.getString("password")
+                    );
+                }
+                return null;
+            }
+        }
     }
 
     /**

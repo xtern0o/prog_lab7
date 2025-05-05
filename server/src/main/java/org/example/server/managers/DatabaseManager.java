@@ -94,6 +94,7 @@ public class DatabaseManager {
         ResultSet resultSet = ps.executeQuery();
 
         if (resultSet == null) return null;
+        resultSet.next();
         return new User(
                 resultSet.getString("login"),
                 resultSet.getString("password")

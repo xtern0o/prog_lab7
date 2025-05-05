@@ -103,7 +103,9 @@ public class DatabaseManager {
             ps.setString(1, login);
 
             ResultSet resultSet = ps.getResultSet();
+
             if (resultSet == null) return false;
+
             if (resultSet.next()) {
                 String salt = resultSet.getString("salt");
                 String inputUserPasswordHash = hashPassword(inputUser.password(), salt);
@@ -175,7 +177,7 @@ public class DatabaseManager {
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
                         coordinates,
-                        resultSet.getTimestamp("creationDate").toInstant().atZone(ZoneId.of("Europe/Moscow")),
+                        resultSet.getTimestamp("creation_date").toInstant().atZone(ZoneId.of("Europe/Moscow")),
                         resultSet.getDouble("price"),
                         resultSet.getFloat("discount"),
                         resultSet.getBoolean("refundable"),

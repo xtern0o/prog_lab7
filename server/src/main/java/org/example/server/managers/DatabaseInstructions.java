@@ -32,7 +32,7 @@ public class DatabaseInstructions {
                 type TICKET_TYPE NOT NULL,
                 person_height BIGINT CHECK (person_height > 0),
                 person_nationality COUNTRY NOT NULL,
-                owner_login VARCHAR(255)
+                owner_login VARCHAR(255) REFERENCES users(login)
             );
             """;
 
@@ -62,7 +62,7 @@ public class DatabaseInstructions {
 
     public static String updateTicketById =
             """
-            UPDATE 
+            UPDATE
                 tickets
             SET
                 (name, coord_x, coord_y, price, discount, refundable, type, person_height, person_nationality) = 

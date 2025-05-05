@@ -35,8 +35,7 @@ public class DatabaseManager {
             this.connect();
             this.initDataBase();
         } catch (SQLException sqlException) {
-            logger.warn("Ошибка при инициализации БД, либо они уже созданы");
-            logger.debug(sqlException.getMessage());
+            logger.warn("БД уже создана или возникла иная ошибка: {}", sqlException.getMessage());
         } catch (NoSuchAlgorithmException algorithmException) {
             logger.error("Такого алгоритма для хэширования нет");
             logger.debug(algorithmException.getMessage());

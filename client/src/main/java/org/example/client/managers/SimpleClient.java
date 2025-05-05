@@ -1,5 +1,6 @@
 package org.example.client.managers;
 
+import lombok.Getter;
 import org.example.common.dtp.ObjectSerializer;
 import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
@@ -17,8 +18,10 @@ import java.nio.channels.UnresolvedAddressException;
  * Класс клиента, отвечающий за общение с сервером
  */
 public class SimpleClient implements Closeable {
+    @Getter
     private final int port;
 
+    @Getter
     private final String host;
 
     /**

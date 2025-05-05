@@ -27,11 +27,6 @@ public class RuntimeManager implements Runnable {
     private final RunnableScriptsManager runnableScriptsManager;
     private final ClientCommandManager clientCommandManager;
 
-    /**
-     * Текущий пользователь
-     */
-    private AuthManager authManager;
-
     public RuntimeManager(Printable consoleOutput, ConsoleInput consoleInput, SimpleClient client, RunnableScriptsManager runnableScriptsManager, ClientCommandManager clientCommandManager) {
         this.consoleOutput = consoleOutput;
         this.consoleInput = consoleInput;
@@ -50,13 +45,14 @@ public class RuntimeManager implements Runnable {
         }));
 
         consoleOutput.println(
-                "Добро пожаловать в клиентское приложение для работы с коллекцией Ticket.\n" +
-                "> \"help\" для справки по доступным командам"
+                "> \"help\" для справки по доступным командам\n" +
+                "> \"help_client\" для справки о клиентских командах (управление авторизацией)"
         );
 
         while (true) {
             try {
-                consoleOutput.print("$ ");
+                consoleOutput.print(String.format("[%s@%s:%s] $ ", AuthManager.getCurrentUser() == null ? "NOAUTH" : AuthManager.getCurrentUser().login(), client.getHost(), client.getPort()));
+
                 String queryString = consoleInput.readLine().trim();
 
                 if (queryString.isBlank()) continue;

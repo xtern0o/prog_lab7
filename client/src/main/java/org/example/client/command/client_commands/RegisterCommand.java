@@ -38,6 +38,7 @@ public class RegisterCommand extends ClientCommand {
         Response response = client.send(requestCommand);
 
         if (response.getResponseStatus().equals(ResponseStatus.OK)) {
+            AuthManager.setCurrentUser(user);
             consoleOutput.println("Регистрация прошла успешно! Вы авторизованы как " + user.login());
         }
         else {

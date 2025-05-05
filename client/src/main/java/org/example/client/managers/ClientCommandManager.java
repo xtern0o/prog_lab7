@@ -1,5 +1,6 @@
 package org.example.client.managers;
 
+import lombok.Getter;
 import org.example.client.command.ClientCommand;
 import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
@@ -8,6 +9,7 @@ import org.example.common.exceptions.NoSuchCommand;
 import java.util.Collection;
 import java.util.HashMap;
 
+@Getter
 public class ClientCommandManager {
     private final HashMap<String, ClientCommand> commands = new HashMap<>();
 

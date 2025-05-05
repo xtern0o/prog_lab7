@@ -2,9 +2,8 @@ package org.example.client;
 
 import org.example.client.cli.ConsoleInput;
 import org.example.client.cli.ConsoleOutput;
-import org.example.client.command.client_commands.ExitCommand;
-import org.example.client.command.client_commands.LoginCommand;
-import org.example.client.command.client_commands.RegisterCommand;
+import org.example.client.command.ClientCommand;
+import org.example.client.command.client_commands.*;
 import org.example.client.managers.*;
 
 import java.util.ArrayList;
@@ -38,11 +37,15 @@ public class Main {
 
         SimpleClient client = new SimpleClient(host, port, 100, 10, consoleOutput, false);
 
-        clientCommandManager.addCommands(new ArrayList<>(List.of(
+        ArrayList<ClientCommand> commands = new ArrayList<>(List.of(
                 new ExitCommand(),
                 new LoginCommand(client, consoleInput, consoleOutput),
-                new RegisterCommand(client, consoleInput, consoleOutput)
-        )));
+                new RegisterCommand(client, consoleInput, consoleOutput),
+                new LogoutCommand(consoleOutput),
+                new HelpClientCommand(consoleOutput, clientCommandManager)
+        ));
+
+        clientCommandManager.addCommands(commands);
 
         new RuntimeManager(consoleOutput, consoleInput, client, runnableScriptsManager, clientCommandManager).run();
     }

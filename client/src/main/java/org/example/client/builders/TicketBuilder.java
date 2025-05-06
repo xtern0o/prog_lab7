@@ -1,6 +1,7 @@
 package org.example.client.builders;
 
 import org.example.client.cli.ConsoleInput;
+import org.example.client.managers.AuthManager;
 import org.example.common.entity.Coordinates;
 import org.example.common.entity.Person;
 import org.example.common.entity.Ticket;
@@ -33,7 +34,7 @@ public class TicketBuilder extends Builder<Ticket>{
         boolean refundable = askBoolean("возвратный");
         Person person = new PersonBuilder(consoleOutput, consoleInput).build();
 
-        return new Ticket(name, coordinates, price, discount, type, refundable, person);
+        return new Ticket(name, coordinates, price, discount, type, refundable, person, AuthManager.getCurrentUser().login());
     }
 
 }

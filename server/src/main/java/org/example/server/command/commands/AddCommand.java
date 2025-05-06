@@ -27,8 +27,9 @@ public class AddCommand extends Command {
             DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
 
             Ticket newTicket = requestCommand.getTicketObject();
+
             if (!newTicket.validate()) {
-                return new Response(ResponseStatus.VALIDATION_ERROR, "Новый объект не прошел валидацию");
+                return new Response(ResponseStatus.VALIDATION_ERROR, "Новый объект не прошел валидацию: \n" + newTicket.toString() );
             }
 
             int newTicketId = databaseManager.addTicket(newTicket);

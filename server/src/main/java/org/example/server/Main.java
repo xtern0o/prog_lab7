@@ -31,10 +31,6 @@ public class Main {
     public static void main(String[] args) {
         if (!validateArgs(args)) return;
 
-        FileManager fileManager = new FileManager(new File(args[0]), consoleOutput);
-        if (!fileManager.validate()) return;
-        fileManager.deserializeCollectionFromJSON();
-
         DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
         CollectionManager.setCollection(databaseManager.loadCollection());
 
@@ -60,7 +56,7 @@ public class Main {
         commandManager.addCommands(commands);
 
         Server server = new Server(port, requestCommandHandler, consoleOutput);
-        RuntimeManager runtimeManager = new RuntimeManager(consoleOutput, server, fileManager);
+        RuntimeManager runtimeManager = new RuntimeManager(consoleOutput, server);
 
         try {
             runtimeManager.run();
@@ -71,13 +67,13 @@ public class Main {
     }
 
     public static boolean validateArgs(String[] args) {
-        if (args.length != 2) {
+        if (args.length != 1) {
             logger.error("Неверное количество аргументов при запуске");
-            consoleOutput.println("* Корректный запуск программы: java -jar <путь до программы> <файл с данными>.json <порт прослушивания>");
+            consoleOutput.println("* Корректный запуск программы: java -jar <путь до программы> <порт прослушивания>");
             return false;
         }
         try {
-            port = Integer.parseInt(args[1]);
+            port = Integer.parseInt(args[0]);
         } catch (NumberFormatException e) {
             logger.error("Некорректный порт");
             return false;

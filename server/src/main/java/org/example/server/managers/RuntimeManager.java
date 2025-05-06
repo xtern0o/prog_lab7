@@ -17,7 +17,6 @@ import java.io.IOException;
 public class RuntimeManager implements Runnable {
     private final Printable consoleOutput;
     private final Server server;
-    private final FileManager fileManager;
 
     public static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 
@@ -44,14 +43,7 @@ public class RuntimeManager implements Runnable {
     }
 
     public void saveCollection() {
-        try {
-            fileManager.serializeCollectionToJSON(CollectionManager.getCollection());
-            if (CollectionManager.getCollection().isEmpty()) consoleOutput.println("Внимание: вы записали в файл пустую коллекцию");
-            else consoleOutput.println("Коллекция успешно сохранена в файле " + fileManager.getFile().getName());
-        } catch (FileNotFoundException fileNotFoundException) {
-            // программа гарантирует, что мы сюда не попадем
-            consoleOutput.printError("Файл для сохранения не найден");
-            throw new RuntimeException(fileNotFoundException);
-        }
+        // TODO: postgres
+        consoleOutput.println("Сохранение нереализовано");
     }
 }

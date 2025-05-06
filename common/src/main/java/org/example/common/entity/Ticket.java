@@ -58,7 +58,6 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
 
     @Override
     public boolean validate() {
-        if (id == null || id <= 0) return false;
         if (name == null || name.isEmpty()) return false;
         if (creationDate == null) return false;
         if (price <= 0) return false;

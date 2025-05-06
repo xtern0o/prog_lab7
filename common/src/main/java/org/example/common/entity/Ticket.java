@@ -20,6 +20,8 @@ import org.example.common.utils.Validatable;
 @Setter
 @AllArgsConstructor
 public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
+    private static final long serialVersionUID = 6476823748348364237L;
+
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     private String name; //Поле не может быть null, Строка не может быть пустой

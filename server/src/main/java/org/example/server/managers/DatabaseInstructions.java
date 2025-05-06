@@ -31,7 +31,7 @@ public class DatabaseInstructions {
                 refundable BOOLEAN,
                 type TICKET_TYPE,
                 person_height BIGINT CHECK (person_height > 0),
-                person_nationality COUNTRY NOT NULL,
+                person_nationality COUNTRY,
                 owner_login VARCHAR(255) REFERENCES users(login)
             );
             """;

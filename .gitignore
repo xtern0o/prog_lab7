@@ -6,6 +6,8 @@ build/
 
 .env
 *.log
+server/log/*
+server/log
 
 ### IntelliJ IDEA ###
 .idea

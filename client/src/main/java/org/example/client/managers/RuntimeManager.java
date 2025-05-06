@@ -51,7 +51,7 @@ public class RuntimeManager implements Runnable {
 
         while (true) {
             try {
-                consoleOutput.print(String.format("[%s@%s:%s] $ ", AuthManager.getCurrentUser() == null ? "NOAUTH" : AuthManager.getCurrentUser().login(), client.getHost(), client.getPort()));
+                consoleOutput.print(String.format("[%s@%s:%s] $ ", AuthManager.getCurrentUser() == null ? "<NOAUTH>" : AuthManager.getCurrentUser().login(), client.getHost(), client.getPort()));
 
                 String queryString = consoleInput.readLine().trim();
 

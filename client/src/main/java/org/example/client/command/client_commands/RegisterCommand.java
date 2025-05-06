@@ -32,6 +32,8 @@ public class RegisterCommand extends ClientCommand {
             return;
         }
 
+        consoleOutput.println("* Регистрация");
+
         User user = new UserBuilder(consoleOutput, consoleInput).build();
 
         RequestCommand requestCommand = new RequestCommand("register", user);

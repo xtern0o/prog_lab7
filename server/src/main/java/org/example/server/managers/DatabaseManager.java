@@ -134,10 +134,9 @@ public class DatabaseManager {
     /**
      * Добавление нового билета в БД
      * @param ticket Объект билета
-     * @param user Объект пользователя
      * @return id нового билета, -1 при ошибке
      */
-    public int addTicket(Ticket ticket, User user) {
+    public int addTicket(Ticket ticket) {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.addTicket);
 
@@ -150,7 +149,7 @@ public class DatabaseManager {
             ps.setObject(7, ticket.getType(), Types.OTHER);
             ps.setLong(8, ticket.getPerson().getHeight());
             ps.setObject(9, ticket.getPerson().getNationality(), Types.OTHER);
-            ps.setString(10, user.login());
+            ps.setString(10, ticket.getOwnerLogin());
 
             ResultSet resultSet = ps.executeQuery();
 
@@ -194,7 +193,8 @@ public class DatabaseManager {
                         resultSet.getFloat("discount"),
                         resultSet.getBoolean("refundable"),
                         TicketType.valueOf(resultSet.getString("type")),
-                        person
+                        person,
+                        resultSet.getString("owner_login")
                 );
 
                 collection.add(ticket);

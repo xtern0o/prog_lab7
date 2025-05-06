@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.example.common.dtp.User;
 import org.example.common.utils.Validatable;
 
 /**
@@ -37,10 +38,12 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
 
     private Person person; //Поле не может быть null
 
+    private String ownerLogin;
+
     public Ticket() {
     }
 
-    public Ticket(String name, Coordinates coordinates, double price, Float discount, TicketType type, boolean refundable, Person person) {
+    public Ticket(String name, Coordinates coordinates, double price, Float discount, TicketType type, boolean refundable, Person person, String owner_login) {
         this.name = name;
         this.coordinates = coordinates;
         this.price = price;
@@ -48,9 +51,10 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
         this.type = type;
         this.refundable = refundable;
         this.person = person;
+        this.creationDate = ZonedDateTime.now();
+        this.owner_login = owner_login;
 
         this.id = 0;
-        this.creationDate = ZonedDateTime.now();
     }
 
     @JsonCreator
@@ -63,9 +67,10 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
             @JsonProperty("refundable") boolean refundable,
             @JsonProperty("person") Person person,
             @JsonProperty("id") Integer id,
-            @JsonProperty("creationDate") ZonedDateTime creationDate
+            @JsonProperty("creationDate") ZonedDateTime creationDate,
+            @JsonProperty("owner_login") String owner_login
     ) {
-        this(name, coordinates, price, discount, type, refundable, person);
+        this(name, coordinates, price, discount, type, refundable, person, owner_login);
         this.id = id;
         this.creationDate = creationDate;
     }
@@ -85,16 +90,17 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
     @Override
     public String toString() {
         return String.format(
-                "Ticket:\n" +
-                        ": id           | %d\n" +
-                        ": name         | %s\n" +
-                        ": coordinates  | %s\n" +
-                        ": creationDate | %s\n" +
-                        ": price        | %.2f\n" +
-                        ": discount     | %.2f\n" +
-                        ": refundable   | %s\n" +
-                        ": type         | %s\n" +
-                        ": person       | %s",
+                "Ticket         [owner: %s]\n" +
+                ": id           | %d\n" +
+                ": name         | %s\n" +
+                ": coordinates  | %s\n" +
+                ": creationDate | %s\n" +
+                ": price        | %.2f\n" +
+                ": discount     | %.2f\n" +
+                ": refundable   | %s\n" +
+                ": type         | %s\n" +
+                ": person       | %s",
+                owner_login,
                 id,
                 name,
                 coordinates,

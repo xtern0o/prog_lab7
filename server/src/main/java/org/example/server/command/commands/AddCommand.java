@@ -7,13 +7,12 @@ import org.example.common.entity.Ticket;
 import org.example.common.exceptions.ValidationError;
 import org.example.server.command.Command;
 import org.example.server.managers.CollectionManager;
+import org.example.server.managers.DatabaseManager;
+import org.example.server.utils.DatabaseSingleton;
 
 public class AddCommand extends Command {
-    private final CollectionManager collectionManager;
-
     public AddCommand(CollectionManager collectionManager) {
         super("add", "add {element} - добавить новый элемент в коллекцию");
-        this.collectionManager = collectionManager;
     }
 
     @Override
@@ -25,13 +24,15 @@ public class AddCommand extends Command {
         if (requestCommand.getTicketObject() == null) {
             return new Response(ResponseStatus.OBJECT_REQUIRED, "Для выполнения команды нужно создать элемент коллекции");
         } else {
+            DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
+
             Ticket newTicket = requestCommand.getTicketObject();
-            newTicket.setId(CollectionManager.generateFreeId());
-            try {
-                collectionManager.addElement(newTicket);
-            } catch (ValidationError validationError) {
-                return new Response(ResponseStatus.VALIDATION_ERROR, "Одно или несколько полей созданного объекта не соответствуют требованиям");
+            int newTicketId = databaseManager.addTicket(newTicket);
+
+            if (newTicketId == -1) {
+                return new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при добавлении в БД");
             }
+
             return new Response(ResponseStatus.OK, "Объект успешно добавлен в коллекцию");
         }
     }

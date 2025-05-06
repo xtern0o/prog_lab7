@@ -32,6 +32,8 @@ public class LoginCommand extends ClientCommand {
             return;
         }
 
+        consoleOutput.println("* Авторизация");
+
         User user = new UserBuilder(consoleOutput, consoleInput).build();
 
         RequestCommand requestCommand = new RequestCommand("ping", user);

@@ -18,7 +18,7 @@ public class HelpClientCommand extends ClientCommand {
 
     @Override
     public void execute() {
-        consoleOutput.println("Справка по доступным клиентским командам");
+        consoleOutput.println("* Справка по клиентским командам");
         clientCommandManager.getCommands()
                 .values()
                 .forEach(command -> consoleOutput.println(command.toString()));

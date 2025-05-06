@@ -5,16 +5,15 @@ import org.example.common.dtp.Response;
 import org.example.common.dtp.ResponseStatus;
 import org.example.server.command.Command;
 import org.example.server.managers.CollectionManager;
+import org.example.server.managers.DatabaseManager;
+import org.example.server.utils.DatabaseSingleton;
 
 /**
  * Класс команды clear
  */
 public class ClearCommand extends Command {
-    private final CollectionManager collectionManager;
-
-    public ClearCommand(CollectionManager collectionManager) {
-        super("clear", "очистить коллекцию");
-        this.collectionManager = collectionManager;
+    public ClearCommand() {
+        super("clear", "удплить все элементы коллекции принадлежащие пользователю");
     }
 
 
@@ -23,7 +22,11 @@ public class ClearCommand extends Command {
         if (requestCommand.getArgs() != null) {
             if (!requestCommand.getArgs().isEmpty()) throw new IllegalArgumentException();
         }
-        collectionManager.clearCollection();
-        return new Response(ResponseStatus.OK, "Коллекция была успешно очищена");
+        DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
+        int deletedRows = databaseManager.deleteObjectsByUser(requestCommand.getUser());
+        if (deletedRows != -1) {
+            return new Response(ResponseStatus.OK, "Удалено объектов: " + deletedRows);
+        }
+        return new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при удалении объектов");
     }
 }

@@ -75,7 +75,7 @@ public class CollectionManager {
      * Получение типа коллекции
      * @return класс объекта коллекции
      */
-    public String getTypeOfCollection() {
+    public static String getTypeOfCollection() {
         return collection.getClass().getName();
     }
 
@@ -92,7 +92,7 @@ public class CollectionManager {
      * @param id айди.
      * @return Объект из коллекции или null, если его не существует
      */
-    public Ticket getElementById(Integer id) {
+    public static Ticket getElementById(Integer id) {
         return collection.stream()
                 .filter(ticket -> Objects.equals(ticket.getId(), id))
                 .findFirst()
@@ -102,7 +102,7 @@ public class CollectionManager {
     /**
      * Очищает коллекцию
      */
-    public void clearCollection() {
+    public static void clearCollection() {
         collection.clear();
     }
 
@@ -111,7 +111,7 @@ public class CollectionManager {
      * @param id id элемента
      * @return true если элемент с таким id есть и удален, и false если элемент не найден
      */
-    public boolean removeById(int id) {
+    public static boolean removeById(int id) {
         boolean deleted = collection.removeIf(ticket -> ticket.getId() == id);
         if (deleted) {
             logger.info("Элемент с id={} был успешно удален", id);

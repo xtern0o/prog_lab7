@@ -40,7 +40,7 @@ public class Main {
                 new AddCommand(collectionManager),
                 new ShowCommand(),
                 new InfoCommand(collectionManager),
-                new ClearCommand(collectionManager),
+                new ClearCommand(),
                 new UpdateCommand(collectionManager),
                 new RemoveByIdCommand(collectionManager),
                 new HeadCommand(collectionManager),

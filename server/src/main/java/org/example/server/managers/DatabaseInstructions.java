@@ -72,6 +72,12 @@ public class DatabaseInstructions {
             SELECT * FROM tickets;
             """;
 
+    public static String getAllTicketsByUser =
+            """
+            SELECT * FROM tickets
+            WHERE (owner_login = ?);
+            """;
+
     public static String updateTicketById =
             """
             UPDATE
@@ -81,5 +87,19 @@ public class DatabaseInstructions {
             (?, ?, ?, ?, ?, ?, ?, ?, ?)
             WHERE 
                 (id = ?) AND (owner_login = ?);
+            """;
+
+    public static String deleteTicketByIdFromUser =
+            """
+            DELETE FROM tickets
+            WHERE
+                (id = ?) AND (owner_login = ?);
+            """;
+
+    public static String deleteAllTicketsFromUser =
+            """
+            DELETE FROM tickets
+            WHERE
+                (owner_login = ?);
             """;
 }

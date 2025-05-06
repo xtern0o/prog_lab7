@@ -4,6 +4,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.example.common.dtp.User;
 import org.example.common.entity.*;
 import org.example.server.Main;
+import org.example.server.utils.DatabaseSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,6 +13,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class DatabaseManager {
@@ -166,6 +169,21 @@ public class DatabaseManager {
             logger.debug(sqlException.getMessage());
             return -1;
         }
+    }
+
+    public int deleteObjectsByUser(User user) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.deleteAllTicketsFromUser);
+            ps.setString(1, user.login());
+            int affectedRows = ps.executeUpdate();
+            logger.info("Удалено {} объектов от пользотвателя \"{}\"", affectedRows, user.login());
+            return affectedRows;
+
+        } catch (SQLException sqlException) {
+            logger.warn("Не удалось удалить объекты");
+            return -1;
+        }
+
     }
 
     public PriorityBlockingQueue<Ticket> loadCollection() {

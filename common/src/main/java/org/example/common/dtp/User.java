@@ -4,7 +4,7 @@ import org.example.common.utils.Validatable;
 
 import java.io.Serializable;
 
-public record User(String login, String password) implements Serializable, Validatable {
+public record User(String login, String password) implements Validatable {
     @Override
     public String toString() {
         return String.format("User(%s : %s)", login, password);

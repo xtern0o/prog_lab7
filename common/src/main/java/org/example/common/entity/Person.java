@@ -18,8 +18,7 @@ public class Person implements Validatable, Serializable {
     private long height; //Значение поля должно быть больше 0
     private Country nationality; //Поле может быть null
 
-    @JsonCreator
-    public Person(@JsonProperty("height") long height, @JsonProperty("nationality") Country nationality) {
+    public Person(long height, Country nationality) {
         this.height = height;
         this.nationality = nationality;
     }

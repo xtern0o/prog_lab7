@@ -18,8 +18,7 @@ public class Coordinates implements Validatable, Comparable<Coordinates>, Serial
     private float x;
     private Integer y; //Значение поля должно быть больше -471, Поле не может быть null
 
-    @JsonCreator
-    public Coordinates(@JsonProperty("x") float x, @JsonProperty("y") Integer y) {
+    public Coordinates(float x, Integer y) {
         this.x = x;
         this.y = y;
     }

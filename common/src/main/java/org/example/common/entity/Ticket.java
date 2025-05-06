@@ -19,7 +19,7 @@ import org.example.common.utils.Validatable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
+public class Ticket implements Validatable, Comparable<Ticket> {
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     private String name; //Поле не может быть null, Строка не может быть пустой
@@ -40,9 +40,6 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
 
     private String ownerLogin;
 
-    public Ticket() {
-    }
-
     public Ticket(String name, Coordinates coordinates, double price, Float discount, TicketType type, boolean refundable, Person person, String ownerLogin) {
         this.name = name;
         this.coordinates = coordinates;
@@ -55,24 +52,6 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
         this.ownerLogin = ownerLogin;
 
         this.id = 0;
-    }
-
-    @JsonCreator
-    Ticket(
-            @JsonProperty("name") String name,
-            @JsonProperty("coordinates") Coordinates coordinates,
-            @JsonProperty("price") double price,
-            @JsonProperty("discount") Float discount,
-            @JsonProperty("type") TicketType type,
-            @JsonProperty("refundable") boolean refundable,
-            @JsonProperty("person") Person person,
-            @JsonProperty("id") Integer id,
-            @JsonProperty("creationDate") ZonedDateTime creationDate,
-            @JsonProperty("ownerLogin") String ownerLogin
-    ) {
-        this(name, coordinates, price, discount, type, refundable, person, ownerLogin);
-        this.id = id;
-        this.creationDate = creationDate;
     }
 
     @Override

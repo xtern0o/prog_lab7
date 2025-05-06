@@ -34,6 +34,9 @@ public class AddCommand extends Command {
 
             int newTicketId = databaseManager.addTicket(newTicket);
 
+            newTicket.setId(newTicketId);
+            CollectionManager.addElement(newTicket);
+
             if (newTicketId == -1) {
                 return new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при добавлении в БД");
             }

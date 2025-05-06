@@ -139,7 +139,7 @@ public class CollectionManager {
      * @param ticket новый элемент
      * @throws ValidationError в случае неудачного прохождения валидации
      */
-    public void addElement(Ticket ticket) throws ValidationError {
+    public static void addElement(Ticket ticket) throws ValidationError {
         if (ticket.validate()) {
             collection.add(ticket);
             logger.info("Добавлен новый элемент с id={}", ticket.getId());

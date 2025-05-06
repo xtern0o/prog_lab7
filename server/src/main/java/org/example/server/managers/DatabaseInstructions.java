@@ -49,9 +49,21 @@ public class DatabaseInstructions {
     public static String addTicket =
             """
             INSERT INTO
-                tickets (name, coord_x, coord_y, price, discount, refundable, type, person_height, person_nationality, owner_login)
+                tickets (
+                    name,
+                    coord_x,
+                    coord_y,
+                    price,
+                    discount,
+                    refundable,
+                    type,
+                    person_height,
+                    person_nationality,
+                    owner_login,
+                    creation_date
+                )
             VALUES
-                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT)
             RETURNING id;
             """;
 

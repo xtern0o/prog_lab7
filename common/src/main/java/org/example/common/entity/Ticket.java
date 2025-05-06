@@ -43,7 +43,7 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
     public Ticket() {
     }
 
-    public Ticket(String name, Coordinates coordinates, double price, Float discount, TicketType type, boolean refundable, Person person, String owner_login) {
+    public Ticket(String name, Coordinates coordinates, double price, Float discount, TicketType type, boolean refundable, Person person, String ownerLogin) {
         this.name = name;
         this.coordinates = coordinates;
         this.price = price;
@@ -52,7 +52,7 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
         this.refundable = refundable;
         this.person = person;
         this.creationDate = ZonedDateTime.now();
-        this.owner_login = owner_login;
+        this.ownerLogin = ownerLogin;
 
         this.id = 0;
     }
@@ -68,9 +68,9 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
             @JsonProperty("person") Person person,
             @JsonProperty("id") Integer id,
             @JsonProperty("creationDate") ZonedDateTime creationDate,
-            @JsonProperty("owner_login") String owner_login
+            @JsonProperty("ownerLogin") String ownerLogin
     ) {
-        this(name, coordinates, price, discount, type, refundable, person, owner_login);
+        this(name, coordinates, price, discount, type, refundable, person, ownerLogin);
         this.id = id;
         this.creationDate = creationDate;
     }
@@ -100,7 +100,7 @@ public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
                 ": refundable   | %s\n" +
                 ": type         | %s\n" +
                 ": person       | %s",
-                owner_login,
+                ownerLogin,
                 id,
                 name,
                 coordinates,

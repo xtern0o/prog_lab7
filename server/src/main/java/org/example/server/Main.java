@@ -49,7 +49,7 @@ public class Main {
                 new RemoveByIdCommand(collectionManager),
                 new HeadCommand(collectionManager),
                 new RemoveHeadCommand(collectionManager),
-                new FilterStartsWithNameCommand(collectionManager),
+                new FilterStartsWithNameCommand(),
                 new PrintUniqueDiscountCommand(),
                 new PrintFieldDescendingPersonCommand(),
                 new ExecuteScriptCommand(),

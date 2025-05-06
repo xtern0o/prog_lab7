@@ -12,11 +12,8 @@ import java.util.PriorityQueue;
 import java.util.stream.Collectors;
 
 public class FilterStartsWithNameCommand extends Command {
-    private final CollectionManager collectionManager;
-
-    public FilterStartsWithNameCommand(CollectionManager collectionManager) {
+    public FilterStartsWithNameCommand() {
         super("filter_starts_with_name", "вывести элементы, значение поля name которых начинается с заданной подстроки");
-        this.collectionManager = collectionManager;
     }
 
 

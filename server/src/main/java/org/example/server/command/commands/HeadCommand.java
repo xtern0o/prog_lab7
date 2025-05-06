@@ -7,11 +7,8 @@ import org.example.server.command.Command;
 import org.example.server.managers.CollectionManager;
 
 public class HeadCommand extends Command {
-    private final CollectionManager collectionManager;
-
     public HeadCommand(CollectionManager collectionManager) {
         super("head", "выводит первый элемент коллекции");
-        this.collectionManager = collectionManager;
     }
 
     @Override

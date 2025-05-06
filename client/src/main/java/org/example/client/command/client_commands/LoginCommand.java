@@ -32,7 +32,7 @@ public class LoginCommand extends ClientCommand {
             return;
         }
 
-        consoleOutput.println("* Авторизация");
+        consoleOutput.println("Авторизация");
 
         User user = new UserBuilder(consoleOutput, consoleInput).build();
 
@@ -43,7 +43,7 @@ public class LoginCommand extends ClientCommand {
             consoleOutput.println("Вы успешно авторизованы как \"" + user.login() + "\"");
         }
         else if (response.getResponseStatus().equals(ResponseStatus.LOGIN_UNLUCK)) {
-            consoleOutput.printError("Пользователь с введенными данными не найден");
+            consoleOutput.printError("Неверный логин или пароль");
         }
         else {
             consoleOutput.printError(response.getResponseStatus() + ": " + response.getMessage());

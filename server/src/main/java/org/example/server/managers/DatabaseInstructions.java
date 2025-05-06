@@ -29,7 +29,7 @@ public class DatabaseInstructions {
                 price DECIMAL CHECK (price > 0),
                 discount DECIMAL NOT NULL CHECK (discount > 0 AND discount <= 100),
                 refundable BOOLEAN,
-                type TICKET_TYPE NOT NULL,
+                type TICKET_TYPE,
                 person_height BIGINT CHECK (person_height > 0),
                 person_nationality COUNTRY NOT NULL,
                 owner_login VARCHAR(255) REFERENCES users(login)

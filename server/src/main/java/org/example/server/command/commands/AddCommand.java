@@ -34,12 +34,12 @@ public class AddCommand extends Command {
 
             int newTicketId = databaseManager.addTicket(newTicket);
 
-            newTicket.setId(newTicketId);
-            CollectionManager.addElement(newTicket);
-
             if (newTicketId == -1) {
                 return new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при добавлении в БД");
             }
+
+            newTicket.setId(newTicketId);
+            CollectionManager.addElement(newTicket);
 
             return new Response(ResponseStatus.OK, "Объект успешно добавлен в коллекцию");
         }

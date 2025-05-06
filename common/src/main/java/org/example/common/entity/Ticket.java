@@ -19,7 +19,7 @@ import org.example.common.utils.Validatable;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Ticket implements Validatable, Comparable<Ticket> {
+public class Ticket implements Validatable, Comparable<Ticket>, Serializable {
     private Integer id; //Поле не может быть null, Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     private String name; //Поле не может быть null, Строка не может быть пустой

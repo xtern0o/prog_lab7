@@ -171,6 +171,41 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Обновление объекта в БД
+     * @param ticket объект билета
+     * @return 1, если успешно; 0 если не найден; -1 если ошибка выпоолнения
+     */
+    public int updateTicket(Ticket ticket) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.updateTicketById);
+            ps.setString(1, ticket.getName());
+            ps.setFloat(2, ticket.getCoordinates().getX());
+            ps.setInt(3, ticket.getCoordinates().getY());
+            ps.setDouble(4, ticket.getPrice());
+            ps.setFloat(5, ticket.getDiscount());
+            ps.setBoolean(6, ticket.isRefundable());
+            ps.setObject(7, ticket.getType(), Types.OTHER);
+            ps.setLong(8, ticket.getPerson().getHeight());
+            ps.setObject(9, ticket.getPerson().getNationality(), Types.OTHER);
+
+            ps.setInt(10, ticket.getId());
+            ps.setString(11, ticket.getOwnerLogin());
+
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                logger.info("Изменение неудачно: билет с id={} от {} не найден", ticket.getId(), ticket.getOwnerLogin());
+                return 0;
+            }
+            logger.info("Объект с id={} был успешно изменен", ticket.getId());
+            return 1;
+        } catch (SQLException sqlException) {
+            logger.warn("Ошибка выполнения обновление объекта");
+            logger.debug(sqlException.getMessage());
+            return -1;
+        }
+    }
+
     public int deleteObjectsByUser(User user) {
         try {
             PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.deleteAllTicketsFromUser);

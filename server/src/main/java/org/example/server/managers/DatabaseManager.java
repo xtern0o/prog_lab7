@@ -244,8 +244,7 @@ public class DatabaseManager {
             return collection;
 
         } catch (SQLException sqlException) {
-            logger.warn("Ошибка при загрузке коллекции");
-            logger.debug(sqlException.getMessage());
+            logger.warn("Ошибка при загрузке коллекции: {}", sqlException.getMessage());
             return null;
         }
     }

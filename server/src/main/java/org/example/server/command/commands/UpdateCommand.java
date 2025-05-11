@@ -38,7 +38,7 @@ public class UpdateCommand extends Command {
 
             int id = Integer.parseInt(requestCommand.getArgs().get(0));
             if (objectsFromUser.stream().noneMatch(ticket -> ticket.getId() == id)) {
-                return new Response(ResponseStatus.ARGS_ERROR, String.format("Объекта с id=%d не существует", id));
+                return new Response(ResponseStatus.ARGS_ERROR, String.format("Объекта с id=%d не существует или он не принадлежит Вам", id));
             }
 
             if (requestCommand.getTicketObject() == null) {

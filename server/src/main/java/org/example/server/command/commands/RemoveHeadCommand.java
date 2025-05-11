@@ -57,7 +57,7 @@ public class RemoveHeadCommand extends Command {
 
         return new Response(
                 ResponseStatus.OK,
-                "Эта запись была удалена:\n" + CollectionManager.getCollection().poll()
+                "Эта запись была удалена:\n" + deletedTicket
         );
     }
 }

@@ -220,11 +220,12 @@ public class DatabaseManager {
                         resultSet.getFloat("coord_x"),
                         resultSet.getInt("coord_y")
                 );
+                String personNationality = resultSet.getString("person_nationality");
                 Person person = new Person(
                         resultSet.getLong("person_height"),
-                        Country.valueOf(resultSet.getString("person_nationality"))
+                        personNationality == null ? null : Country.valueOf(personNationality)
                 );
-
+                String ticketType = resultSet.getString("type");
                 Ticket ticket = new Ticket(
                         resultSet.getInt("id"),
                         resultSet.getString("name"),
@@ -233,7 +234,7 @@ public class DatabaseManager {
                         resultSet.getDouble("price"),
                         resultSet.getFloat("discount"),
                         resultSet.getBoolean("refundable"),
-                        TicketType.valueOf(resultSet.getString("type")),
+                        ticketType == null ? null : TicketType.valueOf(ticketType),
                         person,
                         resultSet.getString("owner_login")
                 );

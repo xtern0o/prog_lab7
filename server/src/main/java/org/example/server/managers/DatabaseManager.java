@@ -221,8 +221,8 @@ public class DatabaseManager {
                         resultSet.getInt("coord_y")
                 );
                 Person person = new Person(
-                        resultSet.getLong("height"),
-                        Country.valueOf(resultSet.getString("nationality"))
+                        resultSet.getLong("person_height"),
+                        Country.valueOf(resultSet.getString("person_nationality"))
                 );
 
                 Ticket ticket = new Ticket(

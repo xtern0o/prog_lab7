@@ -42,7 +42,7 @@ public class Main {
                 new InfoCommand(collectionManager),
                 new ClearCommand(),
                 new UpdateCommand(collectionManager),
-                new RemoveByIdCommand(collectionManager),
+                new RemoveByIdCommand(),
                 new HeadCommand(collectionManager),
                 new RemoveHeadCommand(collectionManager),
                 new FilterStartsWithNameCommand(),

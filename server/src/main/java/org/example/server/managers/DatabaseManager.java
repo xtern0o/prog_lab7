@@ -183,7 +183,30 @@ public class DatabaseManager {
             logger.warn("Не удалось удалить объекты");
             return -1;
         }
+    }
 
+    /**
+     * Удаляет объект пользователя по id
+     * @param user пользователь
+     * @param id id объекта
+     * @return 1, если успешно; 0 если не найден; -1 если ошибка
+     */
+    public int deleteObjectByIdFromUser(User user, int id) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(DatabaseInstructions.deleteTicketByIdFromUser);
+            ps.setInt(1, id);
+            ps.setString(2, user.login());
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows == 0) {
+                logger.info("Объект с id={} от пользователя {} не найден", id, user);
+                return 0;
+            }
+            logger.info("Объект с id={} удален его создателем", id);
+            return 1;
+        } catch (SQLException sqlException) {
+            logger.warn("Не удалось удалить объект с id={}. Ошибка выполнения запроса", id);
+            return -1;
+        }
     }
 
     public PriorityBlockingQueue<Ticket> loadCollection() {

@@ -24,9 +24,12 @@ public class ClearCommand extends Command {
         }
         DatabaseManager databaseManager = DatabaseSingleton.getDatabaseManager();
         int deletedRows = databaseManager.deleteObjectsByUser(requestCommand.getUser());
-        if (deletedRows != -1) {
-            return new Response(ResponseStatus.OK, "Удалено объектов: " + deletedRows);
+        if (deletedRows == -1) {
+            return new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при удалении объектов");
+
         }
-        return new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при удалении объектов");
+        CollectionManager.setCollection(databaseManager.loadCollection());
+        return new Response(ResponseStatus.OK, "Удалено объектов: " + deletedRows);
+
     }
 }

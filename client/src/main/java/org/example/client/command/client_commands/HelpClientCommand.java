@@ -4,8 +4,6 @@ import org.example.client.cli.ConsoleOutput;
 import org.example.client.command.ClientCommand;
 import org.example.client.managers.ClientCommandManager;
 
-import java.util.stream.Collectors;
-
 public class HelpClientCommand extends ClientCommand {
     private final ConsoleOutput consoleOutput;
     private final ClientCommandManager clientCommandManager;
@@ -17,7 +15,9 @@ public class HelpClientCommand extends ClientCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
+        if (args.length != 0) throw new IllegalArgumentException();
+
         consoleOutput.println("* Справка по клиентским командам");
         clientCommandManager.getCommands()
                 .values()

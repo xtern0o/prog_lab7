@@ -26,7 +26,9 @@ public class RegisterCommand extends ClientCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
+        if (args.length != 0) throw new IllegalArgumentException();
+
         if (!Objects.isNull(AuthManager.getCurrentUser())) {
             consoleOutput.println("Вы уже авторизованы как \"" + AuthManager.getCurrentUser().login() + "\"");
             return;

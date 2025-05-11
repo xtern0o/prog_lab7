@@ -24,15 +24,15 @@ public class InfoCommand extends Command {
         if (requestCommand.getArgs() != null) {
             if (!requestCommand.getArgs().isEmpty()) throw new IllegalArgumentException();
         }
-        StringBuilder res = new StringBuilder("Информация о коллекции:\n");
-        res.append(String.format(
+        String res =
+                "Информация о коллекции:\n" + String.format(
                 ": тип                  | %s\n" +
                 ": количество элементов | %d\n" +
                 ": дата инициализации   | %s",
-                collectionManager.getTypeOfCollection(),
-                collectionManager.getCollectionSize(),
-                dateFormat.format(collectionManager.getInitDate())
-        ));
-        return new Response(ResponseStatus.OK, res.toString());
+                CollectionManager.getTypeOfCollection(),
+                CollectionManager.getCollectionSize(),
+                dateFormat.format(CollectionManager.getInitDate())
+        );
+        return new Response(ResponseStatus.OK, res);
     }
 }

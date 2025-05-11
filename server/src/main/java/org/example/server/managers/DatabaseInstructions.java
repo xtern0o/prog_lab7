@@ -48,20 +48,8 @@ public class DatabaseInstructions {
 
     public static String addTicket =
             """
-            INSERT INTO
-                tickets (
-                    name,
-                    coord_x,
-                    coord_y,
-                    price,
-                    discount,
-                    refundable,
-                    type,
-                    person_height,
-                    person_nationality,
-                    owner_login,
-                    creation_date
-                )
+            INSERT INTO tickets
+                (name, coord_x, coord_y, price, discount, refundable, type, person_height, person_nationality, owner_login, creation_date)
             VALUES
                 (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, DEFAULT)
             RETURNING id;
@@ -83,9 +71,9 @@ public class DatabaseInstructions {
             UPDATE
                 tickets
             SET
-                (name, coord_x, coord_y, price, discount, refundable, type, person_height, person_nationality) = 
+                (name, coord_x, coord_y, price, discount, refundable, type, person_height, person_nationality) =
             (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            WHERE 
+            WHERE
                 (id = ?) AND (owner_login = ?);
             """;
 

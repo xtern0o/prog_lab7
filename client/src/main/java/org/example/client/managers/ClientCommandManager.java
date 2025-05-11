@@ -40,6 +40,6 @@ public class ClientCommandManager {
         if (!commands.containsKey(name)) throw new NoSuchCommand(name);
 
         ClientCommand clientCommand = commands.get(name);
-        clientCommand.execute();
+        clientCommand.execute(args);
     }
 }

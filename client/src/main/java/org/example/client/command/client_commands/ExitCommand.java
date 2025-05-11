@@ -8,7 +8,9 @@ public class ExitCommand extends ClientCommand {
     }
 
     @Override
-    public void execute() {
+    public void execute(String[] args) {
+        if (args.length != 0) throw new IllegalArgumentException();
+
         System.exit(0);
     }
 }

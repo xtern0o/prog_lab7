@@ -28,7 +28,7 @@ public class CollectionManager {
      * Время инициализации объекта CollectionManager
      */
     @Getter
-    private final Date initDate = new Date();
+    private static final Date initDate = new Date();
 
     /**
      * Метод присваивает коллекции передаваемое значение, если элементы коллекции корректны;
@@ -83,7 +83,7 @@ public class CollectionManager {
      * Возвращает размер коллекции
      * @return число элементов в коллекции
      */
-    public int getCollectionSize() {
+    public static int getCollectionSize() {
         return collection.size();
     }
 

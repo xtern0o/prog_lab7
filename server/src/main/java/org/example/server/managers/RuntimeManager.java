@@ -39,9 +39,9 @@ public class RuntimeManager implements Runnable {
     public void saveCollection() {
         try {
             DatabaseSingleton.getDatabaseManager().commit();
-            consoleOutput.println("Изменения в БД подтверждены");
+            logger.info("Изменения в БД подтверждены");
         } catch (SQLException sqlException) {
-            consoleOutput.println("Не удалось подтвердить изменения в БД");
+            logger.warn("Не удалось подтвердить изменения в БД: {}", sqlException.getMessage());
         }
     }
 }

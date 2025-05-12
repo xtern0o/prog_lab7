@@ -58,7 +58,21 @@ public class ConnectionManager implements Runnable {
 
             try {
                 RequestCommand requestCommand = (RequestCommand) ObjectSerializer.deserializeObject(receivedData);
-                TaskManager.addNewFuture(fixedThreadPool.submit(new RequestCommandHandler(requestCommand, clientChannel, commandManager)));
+
+                logger.info(
+                        "GOT REQUEST: CommandName: {}; Args: {}, User: {}",
+                        requestCommand.getCommandName(), requestCommand.getArgs(), requestCommand.getUser()
+                );
+
+                TaskManager.addNewFuture(
+                        fixedThreadPool.submit(
+                                new RequestCommandHandler(
+                                        requestCommand,
+                                        clientChannel,
+                                        commandManager
+                                )
+                        )
+                );
 
             } catch (IOException e) {
                 logger.warn("Неудача при десериализации: " + e.getMessage());
@@ -87,6 +101,12 @@ public class ConnectionManager implements Runnable {
         new Thread(() -> {
             try {
                 connectionPool.clientChannel().write(ByteBuffer.wrap(ObjectSerializer.serializeObject(connectionPool.response())));
+
+                logger.info(
+                        "SENT RESPONSE: [{}] {}",
+                        connectionPool.response().getResponseStatus(), connectionPool.response().getMessage()
+                );
+
             } catch (IOException ioException) {
                 logger.warn("Не удалось отправить ответ клиенту: {}", ioException.getMessage());
             }

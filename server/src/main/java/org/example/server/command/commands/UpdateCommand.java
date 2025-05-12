@@ -17,11 +17,8 @@ import java.util.stream.Collectors;
 
 // TODO: сделать update
 public class UpdateCommand extends Command {
-    private final CollectionManager collectionManager;
-
-    public UpdateCommand(CollectionManager collectionManager) {
+    public UpdateCommand() {
         super("update", "обновить элемент с введенным id");
-        this.collectionManager = collectionManager;
     }
 
     @Override

@@ -3,11 +3,13 @@ package org.example.server.managers;
 import lombok.AllArgsConstructor;
 import org.example.common.dtp.User;
 import org.example.common.utils.Printable;
+import org.example.server.utils.DatabaseSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * Класс для управления жизненным циклом сервера (запуск, завершение работы)
@@ -43,7 +45,11 @@ public class RuntimeManager implements Runnable {
     }
 
     public void saveCollection() {
-        // TODO: postgres
-        consoleOutput.println("Сохранение нереализовано");
+        try {
+            DatabaseSingleton.getDatabaseManager().commit();
+            consoleOutput.println("Изменения в БД подтверждены");
+        } catch (SQLException sqlException) {
+            consoleOutput.println("Не удалось подтвердить изменения в БД");
+        }
     }
 }

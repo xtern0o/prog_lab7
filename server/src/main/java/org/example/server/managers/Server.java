@@ -4,7 +4,7 @@ import org.example.common.dtp.ObjectSerializer;
 import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
 import org.example.common.dtp.ResponseStatus;
-import org.example.server.cli.ConsoleOutput;
+import org.example.server.utils.RequestCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,9 +19,6 @@ import java.util.Set;
 
 public class Server {
     private final int port;
-    private final RequestCommandHandler requestCommandHandler;
-    private final ConsoleOutput consoleOutput;
-
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
     private boolean isRunning = false;
@@ -30,10 +27,8 @@ public class Server {
 
     public static Logger logger = LoggerFactory.getLogger(Server.class);
 
-    public Server(int port, RequestCommandHandler requestCommandHandler, ConsoleOutput consoleOutput) {
+    public Server(int port) {
         this.port = port;
-        this.requestCommandHandler = requestCommandHandler;
-        this.consoleOutput = consoleOutput;
     }
 
     public void start() throws IOException {
@@ -106,21 +101,37 @@ public class Server {
         // ignore stupid requests
         if (receivedData.length == 0) return;
 
-        logger.info("Got REQUEST from: {}", clientChannel.getRemoteAddress());
+        logger.info(
+                "Got REQUEST from: {}",
+                clientChannel.getRemoteAddress()
+        );
 
         try {
             RequestCommand requestCommand = (RequestCommand) ObjectSerializer.deserializeObject(receivedData);
             Response response = requestCommandHandler.handleRequestCommand(requestCommand);
             clientChannel.write(ByteBuffer.wrap(ObjectSerializer.serializeObject(response)));
 
-            logger.info("COMMAND NAME: \"{}\"; ARGS: \"{}\"; USER: \"{}\"", requestCommand.getCommandName(), requestCommand.getArgs(), requestCommand.getUser());
-            logger.info("Sent RESPONSE to \"{}\" successfully ({})", clientChannel.getRemoteAddress(), response.getResponseStatus());
+            logger.info(
+                    "COMMAND NAME: \"{}\"; ARGS: \"{}\"; USER: \"{}\"",
+                    requestCommand.getCommandName(),
+                    requestCommand.getArgs(),
+                    requestCommand.getUser()
+            );
+            logger.info(
+                    "Sent RESPONSE to \"{}\" successfully ({})",
+                    clientChannel.getRemoteAddress(),
+                    response.getResponseStatus()
+            );
 
         } catch (ClassNotFoundException e) {
             Response errorResponse = new Response(ResponseStatus.COMMAND_ERROR, "Incorrect command object");
             clientChannel.write(ByteBuffer.wrap(ObjectSerializer.serializeObject(errorResponse)));
 
-            logger.warn("Got INCORRECT request FROM \"{}\". Sent response successfully ({})", clientChannel.getRemoteAddress(), errorResponse.getResponseStatus());
+            logger.warn(
+                    "Got INCORRECT request FROM \"{}\". Sent response successfully ({})",
+                    clientChannel.getRemoteAddress(),
+                    errorResponse.getResponseStatus()
+            );
         }
     }
 

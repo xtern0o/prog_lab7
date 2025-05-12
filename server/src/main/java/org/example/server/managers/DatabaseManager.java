@@ -13,8 +13,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.*;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.concurrent.PriorityBlockingQueue;
 
 public class DatabaseManager {
@@ -60,6 +58,10 @@ public class DatabaseManager {
                 System.exit(1);
             }
         }
+    }
+
+    public void commit() throws SQLException {
+        this.connection.commit();
     }
 
     /**

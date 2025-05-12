@@ -6,19 +6,17 @@ import org.example.server.command.Command;
 import org.example.server.command.commands.*;
 import org.example.server.managers.*;
 import org.example.server.utils.DatabaseSingleton;
+import org.example.server.utils.RequestCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
     static int port;
 
-    static CollectionManager collectionManager = new CollectionManager();
     static CommandManager commandManager = new CommandManager();
-    static RequestCommandHandler requestCommandHandler = new RequestCommandHandler(commandManager);
     static ConsoleOutput consoleOutput = new ConsoleOutput();
 
     public static Dotenv dotenv = Dotenv
@@ -37,11 +35,11 @@ public class Main {
         ArrayList<Command> commands = new ArrayList<Command>(Arrays.asList(
                 new HelpCommand(commandManager),
                 new HistoryCommand(commandManager),
-                new AddCommand(collectionManager),
+                new AddCommand(),
                 new ShowCommand(),
-                new InfoCommand(collectionManager),
+                new InfoCommand(),
                 new ClearCommand(),
-                new UpdateCommand(collectionManager),
+                new UpdateCommand(),
                 new RemoveByIdCommand(),
                 new HeadCommand(),
                 new RemoveHeadCommand(),
@@ -55,7 +53,7 @@ public class Main {
         );
         commandManager.addCommands(commands);
 
-        Server server = new Server(port, requestCommandHandler, consoleOutput);
+        Server server = new Server(port);
         RuntimeManager runtimeManager = new RuntimeManager(consoleOutput, server);
 
         try {

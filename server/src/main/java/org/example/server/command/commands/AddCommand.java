@@ -11,7 +11,7 @@ import org.example.server.managers.DatabaseManager;
 import org.example.server.utils.DatabaseSingleton;
 
 public class AddCommand extends Command {
-    public AddCommand(CollectionManager collectionManager) {
+    public AddCommand() {
         super("add", "add {element} - добавить новый элемент в коллекцию");
     }
 

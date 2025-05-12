@@ -9,13 +9,10 @@ import org.example.server.managers.CollectionManager;
 import java.text.SimpleDateFormat;
 
 public class InfoCommand extends Command {
-    private final CollectionManager collectionManager;
-
     public static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
-    public InfoCommand(CollectionManager collectionManager) {
+    public InfoCommand() {
         super("info", "вывод в стандартный поток вывода информации о коллекции (тип, дата инициализации, количество элементов и т.д.)");
-        this.collectionManager = collectionManager;
     }
 
 

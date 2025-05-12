@@ -19,7 +19,7 @@ public class AsyncMultiThreadServer implements Runnable {
 
     public static int BUFFER_SIZE = 1024;
 
-    public static Logger logger = LoggerFactory.getLogger(Server.class);
+    public static Logger logger = LoggerFactory.getLogger(AsyncMultiThreadServer.class);
 
     public AsyncMultiThreadServer(int port) {
         this.port = port;
@@ -33,7 +33,6 @@ public class AsyncMultiThreadServer implements Runnable {
             logger.error("Ошибка при открытии сервера");
         }
 
-        logger.info("Сервер запущен");
         this.isRunning = true;
         while (isRunning) {
             try {

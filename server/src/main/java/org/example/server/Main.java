@@ -53,7 +53,7 @@ public class Main {
         );
         commandManager.addCommands(commands);
 
-        Server server = new Server(port);
+        AsyncMultiThreadServer server = new AsyncMultiThreadServer(port);
         RuntimeManager runtimeManager = new RuntimeManager(consoleOutput, server);
 
         try {

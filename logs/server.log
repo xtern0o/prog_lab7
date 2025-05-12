@@ -1,2 +1,3 @@
-2025-05-05 03:02:01 [main] INFO  o.e.s.managers.CollectionManager    - Коллекция обновлена
-2025-05-05 03:02:01 [main] ERROR o.e.server.managers.DatabaseManager - Невозможно подключиться к базе данных
+2025-05-12 17:38:47 [main] ERROR o.e.server.managers.DatabaseManager - Невозможно подключиться к базе данных
+2025-05-12 17:38:47 [main] ERROR o.e.server.managers.DatabaseManager - Подсоединение по адресу localhost:5432 отклонено. Проверьте что хост и порт указаны правильно и что postmaster принимает TCP/IP-подсоединения.
+2025-05-12 17:38:47 [main] ERROR o.e.server.managers.DatabaseManager - Ошибка при попытке подсоединения.

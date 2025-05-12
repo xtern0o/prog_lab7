@@ -18,7 +18,7 @@ import java.sql.SQLException;
 @AllArgsConstructor
 public class RuntimeManager implements Runnable {
     private final Printable consoleOutput;
-    private final Server server;
+    private final AsyncMultiThreadServer server;
 
     public static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 
@@ -26,22 +26,17 @@ public class RuntimeManager implements Runnable {
     public void run() {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             saveCollection();
-            try {
-                server.stop();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            server.stop();
 
             logger.info("⚡ Сервер - В С Ё.");
         }));
 
-        try {
-            logger.info("Сервер для управления коллекцией Ticket запущен");
-            consoleOutput.println("> [Ctrl + C], чтобы завершить работу");
-            server.start();
-        } catch (IOException ioException) {
-            throw new RuntimeException(ioException);
-        }
+
+        logger.info("Сервер для управления коллекцией Ticket запущен");
+        consoleOutput.println("> [Ctrl + C], чтобы завершить работу");
+
+        server.run();
+
     }
 
     public void saveCollection() {

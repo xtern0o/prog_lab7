@@ -1,4 +1,4 @@
-package org.example.server.managers;
+package org.example.server.utils;
 
 public class DatabaseInstructions {
     public static String createDatabase =

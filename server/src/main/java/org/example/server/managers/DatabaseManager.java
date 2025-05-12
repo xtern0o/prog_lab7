@@ -4,7 +4,7 @@ import org.apache.commons.codec.binary.Hex;
 import org.example.common.dtp.User;
 import org.example.common.entity.*;
 import org.example.server.Main;
-import org.example.server.utils.DatabaseSingleton;
+import org.example.server.utils.DatabaseInstructions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

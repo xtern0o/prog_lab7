@@ -52,7 +52,7 @@ public class Main {
         );
         commandManager.addCommands(commands);
 
-        MultiThreadServer server = new MultiThreadServer(port);
+        MultiThreadServer server = new MultiThreadServer(port, commandManager);
         RuntimeManager runtimeManager = new RuntimeManager(consoleOutput, server);
 
         try {

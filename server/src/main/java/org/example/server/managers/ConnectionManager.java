@@ -4,6 +4,7 @@ import org.example.common.dtp.ObjectSerializer;
 import org.example.common.dtp.RequestCommand;
 import org.example.common.dtp.Response;
 import org.example.common.dtp.ResponseStatus;
+import org.example.server.command.Command;
 import org.example.server.utils.ConnectionPool;
 import org.example.server.utils.RequestCommandHandler;
 import org.slf4j.Logger;
@@ -23,11 +24,13 @@ import java.util.concurrent.Executors;
 public class ConnectionManager implements Runnable {
     private static final ExecutorService fixedThreadPool = Executors.newFixedThreadPool(8);
     private final SocketChannel clientChannel;
+    private final CommandManager commandManager;
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 
-    public ConnectionManager(SocketChannel clientChannel) {
+    public ConnectionManager(SocketChannel clientChannel, CommandManager commandManager) {
         this.clientChannel = clientChannel;
+        this.commandManager = commandManager;
     }
 
     @Override
@@ -55,7 +58,7 @@ public class ConnectionManager implements Runnable {
 
             try {
                 RequestCommand requestCommand = (RequestCommand) ObjectSerializer.deserializeObject(receivedData);
-                TaskManager.addNewFuture(fixedThreadPool.submit(new RequestCommandHandler(requestCommand, clientChannel)));
+                TaskManager.addNewFuture(fixedThreadPool.submit(new RequestCommandHandler(requestCommand, clientChannel, commandManager)));
 
             } catch (IOException e) {
                 logger.warn("Неудача при десериализации: " + e.getMessage());

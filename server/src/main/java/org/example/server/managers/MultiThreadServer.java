@@ -15,6 +15,7 @@ public class MultiThreadServer implements Runnable {
     private final int port;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
+    private final CommandManager commandManager;
 
     private final ExecutorService threadPool = Executors.newFixedThreadPool(8);
 
@@ -22,8 +23,9 @@ public class MultiThreadServer implements Runnable {
 
     public static final Logger logger = LoggerFactory.getLogger(MultiThreadServer.class);
 
-    public MultiThreadServer(int port) {
+    public MultiThreadServer(int port, CommandManager commandManager) {
         this.port = port;
+        this.commandManager = commandManager;
     }
 
     @Override
@@ -36,7 +38,7 @@ public class MultiThreadServer implements Runnable {
         }
 
         this.isRunning = true;
-        logger.info("Сервер запущен на порту " + port);
+        logger.info("Сервер прослушивает порт: " + port);
 
         while (isRunning) {
             try {
@@ -57,7 +59,7 @@ public class MultiThreadServer implements Runnable {
                     }
                 }
             } catch (IOException ioException) {
-                logger.error("Ошибка в основном цикле сервера", ioException);
+                logger.error("Ошибка в рантайме: ", ioException);
             }
 
             TaskManager.getReadyResults();
@@ -89,7 +91,7 @@ public class MultiThreadServer implements Runnable {
         SocketChannel clientChannel = (SocketChannel) key.channel();
 
         // Обработка чтения запроса в пуле потоков
-        new Thread(new ConnectionManager(clientChannel)).start();
+        new Thread(new ConnectionManager(clientChannel, commandManager)).start();
     }
 
     private void shutdown() {

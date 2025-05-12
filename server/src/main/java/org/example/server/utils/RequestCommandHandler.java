@@ -23,10 +23,10 @@ public class RequestCommandHandler implements Callable<ConnectionPool> {
     private final RequestCommand requestCommand;
     private final SocketChannel socketChannel;
 
-    public RequestCommandHandler(RequestCommand requestCommand, SocketChannel socketChannel) {
+    public RequestCommandHandler(RequestCommand requestCommand, SocketChannel socketChannel, CommandManager commandManager) {
         this.requestCommand = requestCommand;
         this.socketChannel = socketChannel;
-        this.commandManager = CommandManagerSingleton.getCommandManager();
+        this.commandManager = commandManager;
     }
 
     /**

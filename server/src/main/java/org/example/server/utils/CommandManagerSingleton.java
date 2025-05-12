@@ -5,7 +5,7 @@ import org.example.server.managers.CommandManager;
 import java.util.Objects;
 
 public class CommandManagerSingleton {
-    private static CommandManager commandManager;
+    public static CommandManager commandManager;
 
     static {
         commandManager = new CommandManager();

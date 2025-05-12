@@ -15,8 +15,6 @@ public class MultiThreadServer implements Runnable {
     private ServerSocketChannel serverSocketChannel;
     private final CommandManager commandManager;
 
-    private final ExecutorService threadPool = Executors.newFixedThreadPool(8);
-
     private volatile boolean isRunning = false;
 
     public static final Logger logger = LoggerFactory.getLogger(MultiThreadServer.class);
@@ -45,7 +43,9 @@ public class MultiThreadServer implements Runnable {
                 SocketChannel clientChannel = serverSocketChannel.accept();
                 logger.info("Новое подключение: " + clientChannel.getRemoteAddress());
 
-                new Thread(new ConnectionManager(clientChannel, commandManager)).start();
+                new Thread(
+                        new ConnectionManager(clientChannel, commandManager)
+                ).start();
 
             } catch (IOException ioException) {
                 logger.error("Ошибка при обработке подключения: ", ioException);
@@ -67,7 +67,6 @@ public class MultiThreadServer implements Runnable {
             if (serverSocketChannel != null && serverSocketChannel.isOpen()) {
                 serverSocketChannel.close();
             }
-            threadPool.shutdown();
             logger.info("Сервер остановлен");
         } catch (IOException e) {
             logger.error("Ошибка при остановке сервера (shutdown)", e);

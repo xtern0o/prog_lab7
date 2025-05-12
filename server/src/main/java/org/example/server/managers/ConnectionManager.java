@@ -59,6 +59,8 @@ public class ConnectionManager implements Runnable {
             }
 
 
+        } catch (EOFException eofException) {
+            logger.info("Клиент закрыл соединение");
         } catch (IOException e) {
             logger.warn("Неудача при десериализации: " + e.getMessage());
         } catch (ClassNotFoundException e) {

@@ -15,6 +15,8 @@ public class MultiThreadServer implements Runnable {
     private ServerSocketChannel serverSocketChannel;
     private final CommandManager commandManager;
 
+    private SocketChannel clientChannel;
+
     private volatile boolean isRunning = false;
 
     public static final Logger logger = LoggerFactory.getLogger(MultiThreadServer.class);
@@ -39,16 +41,11 @@ public class MultiThreadServer implements Runnable {
         while (isRunning) {
             TaskManager.getReadyResults();
 
-            try {
-                SocketChannel clientChannel = serverSocketChannel.accept();
-                logger.info("Новое подключение: " + clientChannel.getRemoteAddress());
-
+            this.clientChannel = connectToClient();
+            if (clientChannel != null) {
                 new Thread(
                         new ConnectionManager(clientChannel, commandManager)
                 ).start();
-
-            } catch (IOException ioException) {
-                logger.error("Ошибка при обработке подключения: ", ioException);
             }
         }
 
@@ -57,7 +54,7 @@ public class MultiThreadServer implements Runnable {
 
     private void openServerSocket() throws IOException {
         serverSocketChannel = ServerSocketChannel.open();
-        serverSocketChannel.bind(new InetSocketAddress(port)); // Устанавливаем порт для прослушивания
+        serverSocketChannel.bind(new InetSocketAddress(port));
         logger.info("Сокеты открыты!");
     }
 
@@ -75,12 +72,17 @@ public class MultiThreadServer implements Runnable {
 
     public void stop() {
         this.isRunning = false;
+        shutdown();
+    }
+
+    private SocketChannel connectToClient() {
         try {
-            if (serverSocketChannel != null && serverSocketChannel.isOpen()) {
-                serverSocketChannel.close();
-            }
-        } catch (IOException e) {
-            logger.error("Ошибка при остановке сервера (stop)", e);
+            serverSocketChannel.socket().setSoTimeout(50);
+            clientChannel = serverSocketChannel.socket().accept().getChannel();
+            logger.info("Соединение установлено: {}", clientChannel.getRemoteAddress());
+            return clientChannel;
+        } catch (IOException ignored) {
+            return null;
         }
     }
 }

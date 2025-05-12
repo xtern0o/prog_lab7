@@ -41,21 +41,23 @@ public class ConnectionManager implements Runnable {
             ObjectInputStream clientReader = new ObjectInputStream(clientChannel.socket().getInputStream());
             ObjectOutputStream clientWriter = new ObjectOutputStream(clientChannel.socket().getOutputStream());
 
+            while (true) {
+                requestCommand = (RequestCommand) clientReader.readObject();
+                logger.info(
+                        "GOT REQUEST: CommandName: {}; Args: {}, User: {}",
+                        requestCommand.getCommandName(), requestCommand.getArgs(), requestCommand.getUser()
+                );
+                TaskManager.addNewFuture(
+                        fixedThreadPool.submit(
+                                new RequestCommandHandler(
+                                        requestCommand,
+                                        clientWriter,
+                                        commandManager
+                                )
+                        )
+                );
+            }
 
-            requestCommand = (RequestCommand) clientReader.readObject();
-            logger.info(
-                    "GOT REQUEST: CommandName: {}; Args: {}, User: {}",
-                    requestCommand.getCommandName(), requestCommand.getArgs(), requestCommand.getUser()
-            );
-            TaskManager.addNewFuture(
-                    fixedThreadPool.submit(
-                            new RequestCommandHandler(
-                                    requestCommand,
-                                    clientWriter,
-                                    commandManager
-                            )
-                    )
-            );
 
         } catch (EOFException eofException) {
             logger.info("Клиент закрыл соединение");

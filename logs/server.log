@@ -1,3 +1,6 @@
 2025-05-12 17:38:47 [main] ERROR o.e.server.managers.DatabaseManager - Невозможно подключиться к базе данных
 2025-05-12 17:38:47 [main] ERROR o.e.server.managers.DatabaseManager - Подсоединение по адресу localhost:5432 отклонено. Проверьте что хост и порт указаны правильно и что postmaster принимает TCP/IP-подсоединения.
 2025-05-12 17:38:47 [main] ERROR o.e.server.managers.DatabaseManager - Ошибка при попытке подсоединения.
+2025-05-12 18:24:46 [main] ERROR o.e.server.managers.DatabaseManager - Невозможно подключиться к базе данных
+2025-05-12 18:24:46 [main] ERROR o.e.server.managers.DatabaseManager - Подсоединение по адресу localhost:5432 отклонено. Проверьте что хост и порт указаны правильно и что postmaster принимает TCP/IP-подсоединения.
+2025-05-12 18:24:46 [main] ERROR o.e.server.managers.DatabaseManager - Ошибка при попытке подсоединения.

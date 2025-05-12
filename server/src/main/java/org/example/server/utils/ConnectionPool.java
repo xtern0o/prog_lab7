@@ -2,6 +2,6 @@ package org.example.server.utils;
 
 import org.example.common.dtp.Response;
 
-import java.io.ObjectOutputStream;
+import java.nio.channels.SocketChannel;
 
-public record ConnectionPool(Response response, ObjectOutputStream objectOutputStream) {}
+public record ConnectionPool(Response response, SocketChannel clientChannel) {}

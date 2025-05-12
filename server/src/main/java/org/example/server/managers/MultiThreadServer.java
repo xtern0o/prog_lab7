@@ -16,6 +16,8 @@ public class MultiThreadServer implements Runnable {
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
 
+    private final ExecutorService threadPool = Executors.newFixedThreadPool(8);
+
     private volatile boolean isRunning = false;
 
     public static final Logger logger = LoggerFactory.getLogger(MultiThreadServer.class);
@@ -38,7 +40,9 @@ public class MultiThreadServer implements Runnable {
 
         while (isRunning) {
             try {
+                // Ожидание событий
                 selector.select(200);
+
                 Set<SelectionKey> selectedKeys = selector.selectedKeys();
                 Iterator<SelectionKey> iter = selectedKeys.iterator();
 
@@ -97,6 +101,7 @@ public class MultiThreadServer implements Runnable {
             if (serverSocketChannel != null && serverSocketChannel.isOpen()) {
                 serverSocketChannel.close();
             }
+            threadPool.shutdown();
             logger.info("Сервер остановлен");
         } catch (IOException e) {
             logger.error("Ошибка при остановке сервера", e);

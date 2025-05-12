@@ -9,6 +9,7 @@ import org.example.server.command.NoAuthCommand;
 import org.example.server.managers.CommandManager;
 
 import java.io.ObjectOutputStream;
+import java.nio.channels.SocketChannel;
 import java.util.Objects;
 import java.util.concurrent.Callable;
 
@@ -20,11 +21,11 @@ import java.util.concurrent.Callable;
 public class RequestCommandHandler implements Callable<ConnectionPool> {
     private final CommandManager commandManager;
     private final RequestCommand requestCommand;
-    private final ObjectOutputStream objectOutputStream;
+    private final SocketChannel socketChannel;
 
-    public RequestCommandHandler(RequestCommand requestCommand, ObjectOutputStream objectOutputStream) {
+    public RequestCommandHandler(RequestCommand requestCommand, SocketChannel socketChannel) {
         this.requestCommand = requestCommand;
-        this.objectOutputStream = objectOutputStream;
+        this.socketChannel = socketChannel;
         this.commandManager = CommandManagerSingleton.getCommandManager();
     }
 
@@ -41,31 +42,31 @@ public class RequestCommandHandler implements Callable<ConnectionPool> {
                 if (!requestCommand.getUser().validate()) {
                     return new ConnectionPool(
                             new Response(ResponseStatus.VALIDATION_ERROR, "Failed user validation"),
-                            objectOutputStream
+                            socketChannel
                     );
                 }
                 if (!DatabaseSingleton.getDatabaseManager().checkUserData(requestCommand.getUser())) {
                     return new ConnectionPool(
                             new Response(ResponseStatus.LOGIN_UNLUCK, "Неверные данные пользователя"),
-                            objectOutputStream
+                            socketChannel
                     );
                 }
             }
 
             return new ConnectionPool(
                     commandManager.execute(requestCommand),
-                    objectOutputStream
+                    socketChannel
             );
 
         } catch (NoSuchCommand noSuchCommand) {
             return new ConnectionPool(
                     new Response(ResponseStatus.NO_SUCH_COMMAND, "Команда \"" + requestCommand.getCommandName() + "\" не найдена"),
-                    objectOutputStream
+                    socketChannel
             );
         } catch (IllegalArgumentException illegalArgumentException) {
             return new ConnectionPool(
                     new Response(ResponseStatus.ARGS_ERROR, "Неверное использование аргументов. " + illegalArgumentException.getMessage()),
-                    objectOutputStream
+                    socketChannel
             );
         }
     }

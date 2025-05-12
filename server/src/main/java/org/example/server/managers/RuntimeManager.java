@@ -1,14 +1,11 @@
 package org.example.server.managers;
 
 import lombok.AllArgsConstructor;
-import org.example.common.dtp.User;
 import org.example.common.utils.Printable;
 import org.example.server.utils.DatabaseSingleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.SQLException;
 
 /**
@@ -18,7 +15,7 @@ import java.sql.SQLException;
 @AllArgsConstructor
 public class RuntimeManager implements Runnable {
     private final Printable consoleOutput;
-    private final AsyncMultiThreadServer server;
+    private final MultiThreadServer server;
 
     public static final Logger logger = LoggerFactory.getLogger(RuntimeManager.class);
 

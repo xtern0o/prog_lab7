@@ -6,7 +6,6 @@ import org.example.server.command.Command;
 import org.example.server.command.commands.*;
 import org.example.server.managers.*;
 import org.example.server.utils.DatabaseSingleton;
-import org.example.server.utils.RequestCommandHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,7 +52,7 @@ public class Main {
         );
         commandManager.addCommands(commands);
 
-        AsyncMultiThreadServer server = new AsyncMultiThreadServer(port);
+        MultiThreadServer server = new MultiThreadServer(port);
         RuntimeManager runtimeManager = new RuntimeManager(consoleOutput, server);
 
         try {

@@ -36,6 +36,7 @@ public class ConnectionManager implements Runnable {
 
             while (clientSocket.isConnected()) {
                 RequestCommand requestCommand = (RequestCommand) clientReader.readObject();
+
                 TaskManager.addNewFuture(fixedThreadPool.submit(new RequestCommandHandler(requestCommand, clientWriter)));
             }
         } catch (IOException ioException) {

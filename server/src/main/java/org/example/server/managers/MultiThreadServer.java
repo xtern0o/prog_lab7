@@ -5,23 +5,22 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
 import java.nio.channels.*;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
-public class AsyncMultiThreadServer implements Runnable {
+public class MultiThreadServer implements Runnable {
     private final int port;
     private ServerSocketChannel serverSocketChannel;
     private Selector selector;
 
     private volatile boolean isRunning = false;
 
-    public static int BUFFER_SIZE = 1024;
+    public static final Logger logger = LoggerFactory.getLogger(MultiThreadServer.class);
 
-    public static Logger logger = LoggerFactory.getLogger(AsyncMultiThreadServer.class);
-
-    public AsyncMultiThreadServer(int port) {
+    public MultiThreadServer(int port) {
         this.port = port;
     }
 
@@ -30,10 +29,13 @@ public class AsyncMultiThreadServer implements Runnable {
         try {
             openServerSocket();
         } catch (IOException ioException) {
-            logger.error("Ошибка при открытии сервера");
+            logger.error("Ошибка при открытии сервера", ioException);
+            return;
         }
 
         this.isRunning = true;
+        logger.info("Сервер запущен на порту " + port);
+
         while (isRunning) {
             try {
                 selector.select(200);
@@ -46,26 +48,28 @@ public class AsyncMultiThreadServer implements Runnable {
 
                     if (key.isAcceptable()) {
                         handleAccept(key);
-                    }
-                    else if (key.isReadable()) {
+                    } else if (key.isReadable()) {
                         handleRead(key);
                     }
                 }
-            } catch (ClosedSelectorException e) {
-                logger.error("Селектор закрыт: {}", e.getMessage());
-                break;
-            } catch (SocketException e) {
-                logger.error("Ошибка сокетов: {}", e.getMessage());
             } catch (IOException ioException) {
-                logger.error("Ошибка чтения запроса: {}", ioException.getMessage());
+                logger.error("Ошибка в основном цикле сервера", ioException);
             }
 
             TaskManager.getReadyResults();
-
         }
 
         shutdown();
+    }
 
+    private void openServerSocket() throws IOException {
+        selector = Selector.open();
+        serverSocketChannel = ServerSocketChannel.open();
+        serverSocketChannel.configureBlocking(false); // Неблокирующий режим
+        serverSocketChannel.bind(new InetSocketAddress(port));
+        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+        logger.info("Серверный сокет открыт и готов принимать подключения");
     }
 
     private void handleAccept(SelectionKey key) throws IOException {
@@ -73,28 +77,20 @@ public class AsyncMultiThreadServer implements Runnable {
         SocketChannel clientChannel = keyChannel.accept();
         clientChannel.configureBlocking(false);
         clientChannel.register(selector, SelectionKey.OP_READ);
+
+        logger.info("Новое подключение: " + clientChannel.getRemoteAddress());
     }
 
     private void handleRead(SelectionKey key) {
         SocketChannel clientChannel = (SocketChannel) key.channel();
 
+        // Обработка чтения запроса в пуле потоков
         new Thread(new ConnectionManager(clientChannel)).start();
-    }
-
-    private void openServerSocket() throws IOException {
-        selector = Selector.open();
-        serverSocketChannel = ServerSocketChannel.open();
-        try {
-            serverSocketChannel = serverSocketChannel.bind(new InetSocketAddress(port));
-        } catch (IOException ioException) {
-            logger.error("Недопустимый для прослушивания порт");
-        }
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
-
     }
 
     private void shutdown() {
         try {
+            isRunning = false;
             if (selector != null && selector.isOpen()) {
                 selector.close();
             }
@@ -103,12 +99,12 @@ public class AsyncMultiThreadServer implements Runnable {
             }
             logger.info("Сервер остановлен");
         } catch (IOException e) {
-            logger.error("Ошибка при попытке остановить работу сервака: {}", e.getMessage());
+            logger.error("Ошибка при остановке сервера", e);
         }
     }
 
     public void stop() {
         this.isRunning = false;
+        selector.wakeup(); // Прерываем блокировку select()
     }
-
 }

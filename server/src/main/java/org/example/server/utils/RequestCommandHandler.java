@@ -21,11 +21,11 @@ import java.util.concurrent.Callable;
 public class RequestCommandHandler implements Callable<ConnectionPool> {
     private final CommandManager commandManager;
     private final RequestCommand requestCommand;
-    private final SocketChannel socketChannel;
+    private final ObjectOutputStream objectOutputStream;
 
-    public RequestCommandHandler(RequestCommand requestCommand, SocketChannel socketChannel, CommandManager commandManager) {
+    public RequestCommandHandler(RequestCommand requestCommand, ObjectOutputStream objectOutputStream, CommandManager commandManager) {
         this.requestCommand = requestCommand;
-        this.socketChannel = socketChannel;
+        this.objectOutputStream = objectOutputStream;
         this.commandManager = commandManager;
     }
 
@@ -42,31 +42,31 @@ public class RequestCommandHandler implements Callable<ConnectionPool> {
                 if (!requestCommand.getUser().validate()) {
                     return new ConnectionPool(
                             new Response(ResponseStatus.VALIDATION_ERROR, "Failed user validation"),
-                            socketChannel
+                            objectOutputStream
                     );
                 }
                 if (!DatabaseSingleton.getDatabaseManager().checkUserData(requestCommand.getUser())) {
                     return new ConnectionPool(
                             new Response(ResponseStatus.LOGIN_UNLUCK, "Неверные данные пользователя"),
-                            socketChannel
+                            objectOutputStream
                     );
                 }
             }
 
             return new ConnectionPool(
                     commandManager.execute(requestCommand),
-                    socketChannel
+                    objectOutputStream
             );
 
         } catch (NoSuchCommand noSuchCommand) {
             return new ConnectionPool(
                     new Response(ResponseStatus.NO_SUCH_COMMAND, "Команда \"" + requestCommand.getCommandName() + "\" не найдена"),
-                    socketChannel
+                    objectOutputStream
             );
         } catch (IllegalArgumentException illegalArgumentException) {
             return new ConnectionPool(
                     new Response(ResponseStatus.ARGS_ERROR, "Неверное использование аргументов. " + illegalArgumentException.getMessage()),
-                    socketChannel
+                    objectOutputStream
             );
         }
     }

@@ -26,6 +26,8 @@ public class ConnectionManager implements Runnable {
     private final SocketChannel clientChannel;
     private final CommandManager commandManager;
 
+    private RequestCommand requestCommand;
+
     private static final Logger logger = LoggerFactory.getLogger(ConnectionManager.class);
 
     public ConnectionManager(SocketChannel clientChannel, CommandManager commandManager) {
@@ -36,80 +38,50 @@ public class ConnectionManager implements Runnable {
     @Override
     public void run() {
         try {
-            ByteBuffer buffer = ByteBuffer.allocate(1024);
+            ObjectInputStream clientReader = new ObjectInputStream(clientChannel.socket().getInputStream());
+            ObjectOutputStream clientWriter = new ObjectOutputStream(clientChannel.socket().getOutputStream());
 
-            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-            int bytesRead;
-            while ((bytesRead = clientChannel.read(buffer)) > 0) {
-                buffer.flip();
-                byteStream.write(buffer.array(), 0, bytesRead);
-                buffer.clear();
-            }
-
-            if (bytesRead == -1) {
-                clientChannel.close();
-                return;
-            }
-
-            byte[] receivedData = byteStream.toByteArray();
-
-            // ignore stupid requests
-            if (receivedData.length == 0) return;
-
-            try {
-                RequestCommand requestCommand = (RequestCommand) ObjectSerializer.deserializeObject(receivedData);
-
+            while (true) {
+                requestCommand = (RequestCommand) clientReader.readObject();
                 logger.info(
                         "GOT REQUEST: CommandName: {}; Args: {}, User: {}",
                         requestCommand.getCommandName(), requestCommand.getArgs(), requestCommand.getUser()
                 );
-
                 TaskManager.addNewFuture(
                         fixedThreadPool.submit(
                                 new RequestCommandHandler(
                                         requestCommand,
-                                        clientChannel,
+                                        clientWriter,
                                         commandManager
                                 )
                         )
                 );
-
-            } catch (IOException e) {
-                logger.warn("Неудача при десериализации: " + e.getMessage());
-                sendNewResponse(new ConnectionPool(
-                        new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при десериализации"),
-                        clientChannel
-                ));
-            } catch (ClassNotFoundException e) {
-                logger.warn("Не удалось корректо десериализовать: " + e.getMessage());
-                sendNewResponse(new ConnectionPool(
-                        new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при десериализации класса"),
-                        clientChannel
-                ));
             }
 
-        } catch (IOException ioException) {
-            logger.warn("Ошибка при буферизации: {}", ioException.getMessage());
-            sendNewResponse(new ConnectionPool(
-                    new Response(ResponseStatus.COMMAND_ERROR, "Ошибка при буферизации"),
-                    clientChannel
-            ));
+
+        } catch (IOException e) {
+            logger.warn("Неудача при десериализации: " + e.getMessage());
+        } catch (ClassNotFoundException e) {
+            logger.warn("Не удалось корректо десериализовать: " + e.getMessage());
         }
     }
+
 
     public static void sendNewResponse(ConnectionPool connectionPool) {
         new Thread(() -> {
             try {
-                connectionPool.clientChannel().write(ByteBuffer.wrap(ObjectSerializer.serializeObject(connectionPool.response())));
-
+                connectionPool.objectOutputStream().writeObject(connectionPool.response());
+                connectionPool.objectOutputStream().flush();
                 logger.info(
-                        "SENT RESPONSE: [{}] {}",
-                        connectionPool.response().getResponseStatus(), connectionPool.response().getMessage()
+                        "SENT RESPONSE [{}]",
+                        connectionPool.response().getResponseStatus()
                 );
-
             } catch (IOException ioException) {
-                logger.warn("Не удалось отправить ответ клиенту: {}", ioException.getMessage());
+                logger.warn("Не удалось отправить ответ клиенту: " + ioException.getMessage());
             }
+
+
+
         }).start();
     }
 }

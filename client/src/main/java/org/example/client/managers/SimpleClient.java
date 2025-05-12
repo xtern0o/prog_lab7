@@ -9,6 +9,8 @@ import org.example.common.utils.Printable;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -43,6 +45,8 @@ public class SimpleClient implements Closeable {
     private boolean exitIfUnsuccessfulConnection;
 
     private SocketChannel socketChannel;
+    private ObjectOutputStream serverWriter;
+    private ObjectInputStream serverReader;
     private int currentReconnectionAttempt;
 
     public static long TIMEOUT_MS = 5000;
@@ -70,8 +74,9 @@ public class SimpleClient implements Closeable {
     public boolean connectToServer() {
         try {
             socketChannel = SocketChannel.open();
-            socketChannel.configureBlocking(false);
             socketChannel.connect(new InetSocketAddress(host, port));
+            this.serverWriter = new ObjectOutputStream(socketChannel.socket().getOutputStream());
+            this.serverReader = new ObjectInputStream(socketChannel.socket().getInputStream());
 
             // заканчиваем соединение до таймаута
             long startTime = System.currentTimeMillis();
@@ -127,33 +132,15 @@ public class SimpleClient implements Closeable {
                 return send(requestCommand);
             }
 
-            // Сериализация и отправка запроса
-            ByteBuffer requestBuffer = ByteBuffer.wrap(ObjectSerializer.serializeObject(requestCommand));
-            while (requestBuffer.hasRemaining()) socketChannel.write(requestBuffer);
+            serverWriter.writeObject(requestCommand);
+            serverWriter.flush();
 
             // Чтение ответа
             Thread.sleep(50);
-            ByteBuffer responseBuffer = ByteBuffer.allocate(16384);
 
-            long startTime = System.currentTimeMillis();
-            while (true) {
-                int bytesRead = socketChannel.read(responseBuffer);
-                if (bytesRead > 0) break;
-                if (bytesRead == -1) {
-                    throw new IOException("Соединение закрыто");
-                }
+            Response response = (Response) serverReader.readObject();
 
-                if (System.currentTimeMillis() - startTime > TIMEOUT_MS) {
-                    return new Response(ResponseStatus.SERVER_ERROR, "Превышено время ожидания ответа");
-                }
-            }
-
-            responseBuffer.flip();
-            byte[] responseBytes = new byte[responseBuffer.remaining()];
-            responseBuffer.get(responseBytes);
-
-            // Десериализация ответа
-            return (Response) ObjectSerializer.deserializeObject(responseBytes);
+            return response;
         } catch (IOException ioException) {
             reconnect();
             if (!isConnected()) return new Response(ResponseStatus.SERVER_ERROR, "Ошибка сервера: " + ioException.getMessage());

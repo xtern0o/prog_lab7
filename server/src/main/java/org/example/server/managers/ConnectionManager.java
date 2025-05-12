@@ -72,6 +72,7 @@ public class ConnectionManager implements Runnable {
     public static void sendNewResponse(ConnectionPool connectionPool) {
         new Thread(() -> {
             try {
+                Thread.sleep(100);
                 connectionPool.objectOutputStream().writeObject(connectionPool.response());
                 connectionPool.objectOutputStream().flush();
                 logger.info(
@@ -80,8 +81,10 @@ public class ConnectionManager implements Runnable {
                 );
             } catch (IOException ioException) {
                 logger.warn("Не удалось отправить ответ клиенту: " + ioException.getMessage());
+            } catch (InterruptedException e) {
+                logger.error("interrupted: " + e.getMessage());
+                throw new RuntimeException(e);
             }
-
 
 
         }).start();

@@ -77,7 +77,7 @@ public class MultiThreadServer implements Runnable {
 
     private SocketChannel connectToClient() {
         try {
-            serverSocketChannel.socket().setSoTimeout(50);
+            serverSocketChannel.socket().setSoTimeout(100);
             clientChannel = serverSocketChannel.socket().accept().getChannel();
             logger.info("Соединение установлено: {}", clientChannel.getRemoteAddress());
             return clientChannel;

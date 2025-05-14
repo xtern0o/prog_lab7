@@ -9,6 +9,7 @@ import org.example.server.command.Command;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Менеджер для управления доступными командами
@@ -16,19 +17,7 @@ import java.util.HashMap;
  */
 @Getter
 public class CommandManager {
-    /**
-     * -- GETTER --
-     *  Получение списка доступных команд
-     *
-     * @return HashMap{commandName, command}
-     */
-    private final HashMap<String, Command> commands = new HashMap<>();
-    /**
-     * -- GETTER --
-     *  Получение истории команд в текущей сессии
-     *
-     * @return Использованные команды ArrayList<Command>
-     */
+    private final ConcurrentHashMap<String, Command> commands = new ConcurrentHashMap<>();
     private final ArrayList<Command> history = new ArrayList<>();
 
     /**

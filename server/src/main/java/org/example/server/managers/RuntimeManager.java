@@ -37,11 +37,6 @@ public class RuntimeManager implements Runnable {
     }
 
     public void saveCollection() {
-        try {
-            DatabaseSingleton.getDatabaseManager().commit();
-            logger.info("Изменения в БД подтверждены");
-        } catch (SQLException sqlException) {
-            logger.warn("Не удалось подтвердить изменения в БД: {}", sqlException.getMessage());
-        }
+        logger.info("autoCommit is enabled, так что все норм все сохранено");
     }
 }

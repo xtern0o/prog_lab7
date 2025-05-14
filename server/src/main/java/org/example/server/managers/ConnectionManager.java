@@ -62,9 +62,9 @@ public class ConnectionManager implements Runnable {
         } catch (EOFException eofException) {
             logger.info("Клиент закрыл соединение");
         } catch (IOException e) {
-            logger.warn("Неудача при десериализации: " + e.getMessage());
+            logger.warn("Неудача при десериализации: {}", e.getMessage());
         } catch (ClassNotFoundException e) {
-            logger.warn("Не удалось корректо десериализовать: " + e.getMessage());
+            logger.warn("Не удалось корректо десериализовать: {}", e.getMessage());
         }
     }
 
@@ -72,7 +72,6 @@ public class ConnectionManager implements Runnable {
     public static void sendNewResponse(ConnectionPool connectionPool) {
         new Thread(() -> {
             try {
-                Thread.sleep(100);
                 connectionPool.objectOutputStream().writeObject(connectionPool.response());
                 connectionPool.objectOutputStream().flush();
                 logger.info(
@@ -81,9 +80,6 @@ public class ConnectionManager implements Runnable {
                 );
             } catch (IOException ioException) {
                 logger.warn("Не удалось отправить ответ клиенту: " + ioException.getMessage());
-            } catch (InterruptedException e) {
-                logger.error("interrupted: " + e.getMessage());
-                throw new RuntimeException(e);
             }
 
 

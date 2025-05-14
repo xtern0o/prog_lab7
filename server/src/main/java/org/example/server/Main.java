@@ -13,15 +13,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Main {
-    static int port;
-
-    static CommandManager commandManager = new CommandManager();
-    static ConsoleOutput consoleOutput = new ConsoleOutput();
-
     public static Dotenv dotenv = Dotenv
             .configure()
             .directory("./server/")
             .load();
+
+    static int port;
+
+    static CommandManager commandManager = new CommandManager();
+    static ConsoleOutput consoleOutput = new ConsoleOutput();
 
     private static final Logger logger = LoggerFactory.getLogger(Main.class);
 

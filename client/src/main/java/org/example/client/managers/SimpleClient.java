@@ -178,12 +178,11 @@ public class SimpleClient implements Closeable {
     private void reconnect() {
         if (currentReconnectionAttempt < maxReconnectionAttempts) {
             try {
-                consoleOutput.println("Переподключение через: " + reconnectionDelay + " мс");
                 currentReconnectionAttempt++;
 
                 close();
                 Thread.sleep(reconnectionDelay);
-                consoleOutput.println(String.format("Попытка: %d/%d", currentReconnectionAttempt, maxReconnectionAttempts));
+                consoleOutput.println(String.format("Попытка: %d/%d. Задержка %d мс", currentReconnectionAttempt, maxReconnectionAttempts, reconnectionDelay));
 
                 connectToServer();
 

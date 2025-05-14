@@ -1,5 +1,9 @@
 package org.example.server.utils;
 
+
+/**
+ * Датакласс с командами PSQL
+ */
 public class DatabaseInstructions {
     public static String createDatabase =
             """

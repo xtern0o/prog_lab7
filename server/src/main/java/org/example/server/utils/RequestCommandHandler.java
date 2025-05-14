@@ -9,8 +9,6 @@ import org.example.server.command.NoAuthCommand;
 import org.example.server.managers.CommandManager;
 
 import java.io.ObjectOutputStream;
-import java.nio.channels.SocketChannel;
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 /**

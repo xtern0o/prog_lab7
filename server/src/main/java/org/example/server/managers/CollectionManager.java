@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.concurrent.PriorityBlockingQueue;
-import java.util.stream.Collectors;
 
 /**
  * Класс для управления коллекцией
@@ -49,26 +48,6 @@ public class CollectionManager {
 
         logger.info("Коллекция обновлена");
         return true;
-    }
-
-    /**
-     * Статический метод для генерации нового id
-     * @return минимальный несуществующий id
-     */
-    public static int generateFreeId() {
-        PriorityBlockingQueue<Ticket> current = collection;
-
-        if (current.isEmpty()) return 1;
-
-        Set<Integer> existIds = current.stream()
-                .map(Ticket::getId)
-                .collect(Collectors.toCollection(HashSet::new));
-
-
-        for (int i = 1; i < Collections.max(existIds); i++) {
-            if (!existIds.contains(i)) return i;
-        }
-        return Collections.max(existIds) + 1;
     }
 
     /**

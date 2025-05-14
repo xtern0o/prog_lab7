@@ -9,6 +9,9 @@ import org.example.common.exceptions.NoSuchCommand;
 import java.util.Collection;
 import java.util.HashMap;
 
+/**
+ * Менеджер для client-side команд
+ */
 @Getter
 public class ClientCommandManager {
     private final HashMap<String, ClientCommand> commands = new HashMap<>();

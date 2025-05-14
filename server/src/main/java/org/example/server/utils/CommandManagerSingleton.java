@@ -4,6 +4,9 @@ import org.example.server.managers.CommandManager;
 
 import java.util.Objects;
 
+/**
+ * Deprecated not used
+ */
 public class CommandManagerSingleton {
     public static CommandManager commandManager;
 
